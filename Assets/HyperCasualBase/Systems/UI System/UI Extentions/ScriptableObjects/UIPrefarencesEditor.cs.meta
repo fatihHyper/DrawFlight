@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 4329e766f7db4834c8564b9ba5455760
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ButtonBackgroundSprite: {instanceID: 0}
+  - ButtonIconSprite: {instanceID: 0}
+  - TextFont: {instanceID: 0}
+  - SliderBackgroundSprite: {instanceID: 0}
+  - SliderFillSprite: {instanceID: 0}
+  - SliderHandleSprite: {instanceID: 0}
+  - DropdownBackgroundSprite: {instanceID: 0}
+  - DropdownArrowSprite: {instanceID: 0}
+  - DropdownItemListBackgroundSprite: {instanceID: 0}
+  - DropdownViewportBackgroundSprite: {instanceID: 0}
+  - DropdownItemCheckmarkSprite: {instanceID: 0}
+  - DropdownScrollbarBackgroundSprite: {instanceID: 0}
+  - DropdownScrollbarHandleSprite: {instanceID: 0}
+  - NToogleBackgroundSprite: {instanceID: 0}
+  - NTooglePointerSprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

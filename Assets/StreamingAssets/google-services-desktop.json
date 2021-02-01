@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "659898113890",
+    "firebase_url": "https://hyper-casual-base.firebaseio.com",
+    "project_id": "hyper-casual-base",
+    "storage_bucket": "hyper-casual-base.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659898113890:android:dc97a23e34ddd92aa1963b",
+        "android_client_info": {
+          "package_name": "com.hyperboxgames.hypercasualbase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659898113890-hlb6k349mqku2e8r5t14ncl9hpal0nid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeQNsXB9ZplR0BslyyJEKSPZARjvIgnAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659898113890-hlb6k349mqku2e8r5t14ncl9hpal0nid.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "659898113890-afoefv64dh8nunnoti93tip2l8k3udo1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyperboxgames.hypercasualbase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

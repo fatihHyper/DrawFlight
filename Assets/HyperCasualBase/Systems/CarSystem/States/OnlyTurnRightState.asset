@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f54f2b60ea04f42ab07af744a36fcf, type: 3}
+  m_Name: OnlyTurnRightState
+  m_EditorClassIdentifier: 
+  actionBehaviours:
+  - {fileID: 11400000, guid: 1e885dd4c731669448d13a2c5664950d, type: 2}
+  transitions:
+  - decision: {fileID: 11400000, guid: d0589d6240e06294fb454395c8399622, type: 2}
+    trueState: {fileID: 11400000, guid: fb3f82ffacccaa547b95cfa9c05f31fe, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: 6b47928c4dc46d240a8501163f8f6f65, type: 2}
+    trueState: {fileID: 11400000, guid: a2fcadb79d79e6b4d9680074a81e4275, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: 5d671d2f538ff4444a0054a53878a842, type: 2}
+    trueState: {fileID: 11400000, guid: 368aafebfd4b5284c90b83384837bdb8, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: 82263c8b8e1ddd84bb87b66c3330cbca, type: 2}
+    trueState: {fileID: 11400000, guid: 1de7349d948921045a76b0b8d87e7b0b, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: a704f0bea015e0f49b72e2117ad8eeb1, type: 2}
+    trueState: {fileID: 11400000, guid: dbb2bd712e9ddf5408106fbe05154968, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: cfb00ba7b11cf2c43a9941faa387ab28, type: 2}
+    trueState: {fileID: 11400000, guid: 286da5bfcb3af02438cafe488a0fb53b, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: 565745b5c18ec7b4aa1030b35d79e05f, type: 2}
+    trueState: {fileID: 11400000, guid: 73c9f4c9bb304ad4faaab29ba187d57b, type: 2}
+    falseState: {fileID: 11400000}
+  - decision: {fileID: 11400000, guid: bf79c9a202c8065419206d4fedf5c54d, type: 2}
+    trueState: {fileID: 11400000, guid: df6d7d22214a6054586114d2e3020500, type: 2}
+    falseState: {fileID: 11400000}
+  sceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

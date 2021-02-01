@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae018001c1c36174aa0bc1f43e8923cd, type: 3}
+  m_Name: AI Car Data
+  m_EditorClassIdentifier: 
+  CarGraphicData:
+    BodyPrefab: {fileID: 3001204574910394400, guid: a17910943090ab94f86709dc9eff2a5d,
+      type: 3}
+    FrontWheelPrefab: {fileID: 8195047760300459243, guid: 3ba082ae939794646a90cdbb859161b8,
+      type: 3}
+    RearWheelPrefab: {fileID: 8296714888736406158, guid: 3e61ab886a1cc9947aac9db773c6cf27,
+      type: 3}
+  CarControlData:
+    CarControlType: 2
+    CarAIType: 0
+    CheckDistanceToWaypoint: 15
+    MotorTorque: 1000
+    BrakeTorque: 1000
+    MaxSpeed: 50
+    MaxSteerAngle: 45
+    TurnSensitivity: 20
+  WheelColliderData:
+    WheelColliderPreset: {fileID: 2655988077585873504, guid: 58fcb1dec17efcc48b877f85eab46803,
+      type: 2}

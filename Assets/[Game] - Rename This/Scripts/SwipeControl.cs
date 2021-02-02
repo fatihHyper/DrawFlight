@@ -32,7 +32,8 @@ public class SwipeControl : MonoBehaviour
     private SplineComputer spline;
     private SplinePoint[] points;
     private Dreamteck.Splines.SplineMesh splineMesh;
-    
+
+    private float length;
 
     private void Awake()
     {
@@ -40,12 +41,12 @@ public class SwipeControl : MonoBehaviour
         lineCount = 0;
         pointCount = 0;
         m_cast = new Plane(m_camera.transform.forward * -1, this.transform.position);
-       // NavMeshSurface.UpdateNavMesh(NavMeshSurface.navMeshData);
+        // NavMeshSurface.UpdateNavMesh(NavMeshSurface.navMeshData);
         //obstacleInRender = (GameObject)PoolingSystem.Instance.InstantiateAPS("DrawCube");
         // m_rendererPrefab = (GameObject) PoolingSystem.Instance.InstantiateAPS("SwipeDraw");
 
     }
-    
+
 
 
     private void FixedUpdate()
@@ -56,7 +57,7 @@ public class SwipeControl : MonoBehaviour
         {
             Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-            
+
 
 
             if (Physics.Raycast(_ray, out hit, layer_mask))
@@ -64,17 +65,7 @@ public class SwipeControl : MonoBehaviour
                 creatSplineObject(hit);
                 startDrawing(hit);
                 //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
-                isDrawComeFromOutside = false;
 
-                Transform[] wingsList = wingsPoint.GetComponentsInChildren<Transform>();
-
-                for (int i = 0; i < wingsList.Length; i++)
-                {
-                    wingsList[i].gameObject.SetActive(false);
-                }
-                wingsPoint.SetActive(true);
-                m_origin = hit.point;
-                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, m_origin, Quaternion.identity,wingsPoint.transform);
 
             }
         }
@@ -83,36 +74,32 @@ public class SwipeControl : MonoBehaviour
 
             Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-            
-            if (Physics.Raycast(_ray, out hit, layer_mask)) 
+
+            if (Physics.Raycast(_ray, out hit, layer_mask))
             {
-               
-                    if (Vector3.Distance(lastPos, hit.point) >= 1 && pointCount < points.Length)
-                    {
-                        drawWithMove(hit);
+
+                if (Vector3.Distance(lastPos, hit.point) >= 1 && pointCount < points.Length)
+                {
+                    drawWithMove(hit);
                     //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
 
-                    m_currentRenderer.transform.position = hit.point;
+
                 }
-                
+
             }
         }
         else if (IsInput(TouchPhase.Ended))
         {
-            //createdDrawObj.transform.localEulerAngles = Vector3.zero;
+
             createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
-            
+
             isDrawComeFromOutside = true;
             clone = Instantiate(transformPanel, wingsPoint.transform.position, Quaternion.Euler(Vector3.zero));
-            
-            clone.transform.position = wingsPoint.transform.position;
-            //clone.transform.localEulerAngles = new Vector3(90, 0, 0);
-            clone.transform.parent = wingsPoint.transform;
 
-            //clone.GetComponentInChildren<SplineComputer>().gameObject.transform.localPosition = Vector3.zero;
-            //clone.GetComponentInChildren<SplineComputer>().gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            createdDrawObj.transform.localEulerAngles = new Vector3(135,0,0);
-            createdDrawObj.transform.localPosition = clone.transform.position;
+            clone.transform.position = wingsPoint.transform.position;
+            clone.transform.parent = wingsPoint.transform;
+            //createdDrawObj.transform.localPosition = new Vector3(createdDrawObj.transform.localPosition.x, createdDrawObj.transform.localPosition.y,0);
+            clone.transform.GetChild(0).transform.localPosition = new Vector3(createdDrawObj.transform.position.x, 0, 0);
 
 
             pointCount = 0;
@@ -122,7 +109,7 @@ public class SwipeControl : MonoBehaviour
         }
     }
 
-  
+
     void creatSplineObject(RaycastHit hit)
     {
         startPos = hit.point;
@@ -134,7 +121,7 @@ public class SwipeControl : MonoBehaviour
         createdDrawObj.GetComponent<MeshRenderer>().material = material;
         createdDrawObj.GetComponent<MeshRenderer>().enabled = false;
         spline = createdDrawObj.AddComponent<SplineComputer>();
-       
+
         //spline.uniformScale = false;
         Dreamteck.Splines.SplineMesh splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
         splineMesh.updateMethod = SplineUser.UpdateMethod.FixedUpdate;
@@ -142,8 +129,10 @@ public class SwipeControl : MonoBehaviour
 
 
         splineMesh.AddChannel(Wallmesh, "Wall");
-        splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Place;
-        splineMesh.GetChannel(0).count = 80;
+        splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
+        splineMesh.GetChannel(0).count = 50;
+
+
         splineMesh.GetChannel(0).minScale = new Vector3(0.1f, 1f, 0.1f);
         splineMesh.GetChannel(0).maxScale = new Vector3(0.1f, 1f, 0.1f);
         points = new SplinePoint[50];
@@ -155,7 +144,7 @@ public class SwipeControl : MonoBehaviour
     }
     void startDrawing(RaycastHit hit)
     {
-        if ( hit.collider == null)
+        if (hit.collider == null)
         {
             isDrawComeFromOutside = true;
             Debug.Log("Its outside");
@@ -174,27 +163,44 @@ public class SwipeControl : MonoBehaviour
             pointCount++;
 
         }
+        isDrawComeFromOutside = false;
+
+        Transform[] wingsList = wingsPoint.GetComponentsInChildren<Transform>();
+
+        for (int i = 0; i < wingsList.Length; i++)
+        {
+            wingsList[i].gameObject.SetActive(false);
+        }
+        wingsPoint.SetActive(true);
+        m_origin = hit.point;
+        m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, m_origin, Quaternion.identity, wingsPoint.transform);
+        m_currentRenderer.layer = 12;
     }
     void drawWithMove(RaycastHit hit)
     {
         if (!isDrawComeFromOutside)
         {
-           // Debug.Log(pointCount);
+            Vector3 temp = lastPos;
+            // Debug.Log(pointCount);
             points[pointCount] = new SplinePoint();
             points[pointCount].position = hit.point;
             points[pointCount].normal = Vector3.up;
             points[pointCount].size = 1f;
             points[pointCount].color = Color.white;
-            
+
             spline.SetPoint(pointCount, points[pointCount], SplineComputer.Space.World);
-           
+
             lastPos = hit.point;
+            length += Vector3.Distance(temp, lastPos);
+            Debug.Log(length);
             pointCount++;
 
-        }
-       
 
-       
+            m_currentRenderer.transform.position = hit.point;
+        }
+
+
+
     }
     private bool IsInput(TouchPhase phase)
     {

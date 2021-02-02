@@ -5,28 +5,25 @@ using Dreamteck.Splines;
 public class SwipeControl : MonoBehaviour
 {
 
-    private static NavMeshSurface navMeshSurface;
-    private static NavMeshSurface NavMeshSurface { get { return (navMeshSurface == null) ? navMeshSurface = FindObjectOfType<NavMeshSurface>() : navMeshSurface; } set { navMeshSurface = value; } }
-
-
-    private GameObject m_rendererPrefab;
-    private GameObject obstacleInRender;
+    public GameObject m_rendererPrefab;
     private GameObject m_currentRenderer;
 
-    public GameObject drawPanel;
+    private GameObject clone;
+    public GameObject transformPanel;
     public GameObject wingsPoint;
     private GameObject wingsParent;
 
     private int layer_mask;
     private bool isDrawComeFromOutside;
-    public GameObject testObject;
-    private GameObject test1;
+    public GameObject drawObjPref;
+    private GameObject createdDrawObj;
     public Material material;
     public Mesh Wallmesh;
 
     private Vector3 startPos;
     private Vector3 lastPos;
     private Plane m_cast;
+    private Vector3 m_origin;
     [SerializeField] private Camera m_camera;
 
     private MeshScaleModifier MeshScaleModifier = new MeshScaleModifier();
@@ -35,6 +32,8 @@ public class SwipeControl : MonoBehaviour
     private SplineComputer spline;
     private SplinePoint[] points;
     private Dreamteck.Splines.SplineMesh splineMesh;
+    
+
     private void Awake()
     {
         layer_mask = LayerMask.GetMask("Ground");
@@ -65,10 +64,21 @@ public class SwipeControl : MonoBehaviour
                 creatSplineObject(hit);
                 startDrawing(hit);
                 //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
+                isDrawComeFromOutside = false;
+
+                Transform[] wingsList = wingsPoint.GetComponentsInChildren<Transform>();
+
+                for (int i = 0; i < wingsList.Length; i++)
+                {
+                    wingsList[i].gameObject.SetActive(false);
+                }
+                wingsPoint.SetActive(true);
+                m_origin = hit.point;
+                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, m_origin, Quaternion.identity,wingsPoint.transform);
 
             }
         }
-        else if (IsInput(TouchPhase.Moved) && LevelManager.Instance.IsLevelStarted)
+        else if (IsInput(TouchPhase.Moved) && LevelManager.Instance.IsLevelStarted && !isDrawComeFromOutside)
         {
 
             Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
@@ -80,16 +90,35 @@ public class SwipeControl : MonoBehaviour
                     if (Vector3.Distance(lastPos, hit.point) >= 1 && pointCount < points.Length)
                     {
                         drawWithMove(hit);
-                        //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
-                    }
+                    //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
+
+                    m_currentRenderer.transform.position = hit.point;
+                }
                 
             }
         }
         else if (IsInput(TouchPhase.Ended))
         {
+            //createdDrawObj.transform.localEulerAngles = Vector3.zero;
+            createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
+            
+            isDrawComeFromOutside = true;
+            clone = Instantiate(transformPanel, wingsPoint.transform.position, Quaternion.Euler(Vector3.zero));
+            
+            clone.transform.position = wingsPoint.transform.position;
+            //clone.transform.localEulerAngles = new Vector3(90, 0, 0);
+            clone.transform.parent = wingsPoint.transform;
 
-            test1.transform.position = wingsParent.transform.position;
-             spline.Break(pointCount-1);
+            //clone.GetComponentInChildren<SplineComputer>().gameObject.transform.localPosition = Vector3.zero;
+            //clone.GetComponentInChildren<SplineComputer>().gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            createdDrawObj.transform.localEulerAngles = new Vector3(135,0,0);
+            createdDrawObj.transform.localPosition = clone.transform.position;
+
+
+            pointCount = 0;
+            Destroy(m_currentRenderer);
+            Destroy(createdDrawObj);
+
         }
     }
 
@@ -99,15 +128,15 @@ public class SwipeControl : MonoBehaviour
         startPos = hit.point;
         lastPos = startPos;
 
-        wingsParent = (GameObject)Instantiate(testObject,wingsPoint.transform.position,Quaternion.identity,drawPanel.transform);
 
-        test1 = (GameObject)Instantiate(testObject, startPos, Quaternion.identity,wingsParent.transform);
-        test1.layer = LayerMask.NameToLayer("Ignore Raycast");
-        test1.GetComponent<MeshRenderer>().material = material;
-
-        spline = test1.AddComponent<SplineComputer>();
+        createdDrawObj = (GameObject)Instantiate(drawObjPref, startPos, Quaternion.identity, transformPanel.transform);
+        createdDrawObj.layer = LayerMask.NameToLayer("Ignore Raycast");
+        createdDrawObj.GetComponent<MeshRenderer>().material = material;
+        createdDrawObj.GetComponent<MeshRenderer>().enabled = false;
+        spline = createdDrawObj.AddComponent<SplineComputer>();
+       
         //spline.uniformScale = false;
-        Dreamteck.Splines.SplineMesh splineMesh = test1.AddComponent<Dreamteck.Splines.SplineMesh>();
+        Dreamteck.Splines.SplineMesh splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
         splineMesh.updateMethod = SplineUser.UpdateMethod.FixedUpdate;
         spline.updateMode = SplineComputer.UpdateMode.FixedUpdate;
 
@@ -115,8 +144,8 @@ public class SwipeControl : MonoBehaviour
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Place;
         splineMesh.GetChannel(0).count = 80;
-        splineMesh.GetChannel(0).minScale = new Vector3(1f, 0.1f, 0.3f);
-        splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.1f, 0.3f);
+        splineMesh.GetChannel(0).minScale = new Vector3(0.1f, 1f, 0.1f);
+        splineMesh.GetChannel(0).maxScale = new Vector3(0.1f, 1f, 0.1f);
         points = new SplinePoint[50];
 
         spline.type = Spline.Type.BSpline;
@@ -137,11 +166,10 @@ public class SwipeControl : MonoBehaviour
             points[pointCount] = new SplinePoint();
             points[pointCount].position = hit.point;
             points[pointCount].normal = Vector3.up;
-            points[pointCount].size = 0.5f;
+            points[pointCount].size = 1f;
             points[pointCount].color = Color.white;
 
             spline.SetPoint(pointCount, points[pointCount], SplineComputer.Space.World);
-            NavMeshSurface.UpdateNavMesh(NavMeshSurface.navMeshData);
             lastPos = hit.point;
             pointCount++;
 
@@ -155,13 +183,14 @@ public class SwipeControl : MonoBehaviour
             points[pointCount] = new SplinePoint();
             points[pointCount].position = hit.point;
             points[pointCount].normal = Vector3.up;
-            points[pointCount].size = 0.5f;
+            points[pointCount].size = 1f;
             points[pointCount].color = Color.white;
-
+            
             spline.SetPoint(pointCount, points[pointCount], SplineComputer.Space.World);
-            //NavMeshSurface.UpdateNavMesh(NavMeshSurface.navMeshData);
+           
             lastPos = hit.point;
             pointCount++;
+
         }
        
 

@@ -548,7 +548,7 @@ namespace ElephantSDK
         {
             if (debug)
             {
-                Debug.Log(s);
+                //Debug.Log(s);
             }
         }
 

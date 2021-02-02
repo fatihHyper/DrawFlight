@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/[Game] - Rename This/Scenes/Level-Test.unity
     guid: ac6b8c4ba7c604bdf9c307393758d93c
+  - enabled: 1
+    path: Assets/[Game] - Rename This/Scenes/Level_1.unity
+    guid: 6f6e128f53b2f944ea6d7ff7ee53f10f
   m_configObjects: {}

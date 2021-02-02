@@ -12,14 +12,14 @@ public class CameraController : Singleton<CameraController>
 
 	private Vector3 focus { get { return GetCenterPosition(); } }
 
-	[SerializeField, Range(1f, 20f)]
-	float distance = 5f;
+	[SerializeField, Range(1f, 100f)]
+	float distance = 5f; 
 
 	[SerializeField, Min(0f)]
 	float focusRadius = 5f;
 
 	[SerializeField, Range(0f, 1f)]
-	float focusCentering = 0.5f;
+	float focusCentering = 0.5f; 
 
 	[SerializeField, Range(1f, 360f)]
 	float rotationSpeed = 90f;

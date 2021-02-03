@@ -47,7 +47,6 @@ MonoBehaviour:
   m_rendererPrefab: {fileID: 8300274247265581926, guid: eb60091c7fd36704bacd266ac9a97e25,
     type: 3}
   transformPanel: {fileID: 0}
-  wingsPoint: {fileID: 0}
   drawObjPref: {fileID: 6870848138848082245, guid: 1246ed98392876d49acb6dd5c018aedc,
     type: 3}
   material: {fileID: 2100000, guid: 6ff757abf7023c94ead17e065b3b7e4a, type: 2}
@@ -66,5 +65,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Brush: {fileID: 8300274247265581926, guid: eb60091c7fd36704bacd266ac9a97e25, type: 3}
-  BrushSize: 0.1
+  BrushSize: 0.01
   RTexture: {fileID: 8400000, guid: 7fb7ce18409b64d00a227dd3b296c36b, type: 2}

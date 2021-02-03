@@ -27,6 +27,9 @@ public class CameraController : Singleton<CameraController>
 	[SerializeField, Range(-89f, 89f)]
 	float minVerticalAngle = -45f, maxVerticalAngle = 45f;
 
+	[SerializeField, Range(-89f, 89f)]
+	float minHorizontalAngle = -45f, maxHorizontalAngle = 45f;
+
 	[SerializeField, Min(0f)]
 	float alignDelay = 5f;
 
@@ -216,6 +219,8 @@ public class CameraController : Singleton<CameraController>
 		orbitAngles.x =
 			Mathf.Clamp(orbitAngles.x, minVerticalAngle, maxVerticalAngle);
 
+		orbitAngles.y =
+			Mathf.Clamp(orbitAngles.y, minHorizontalAngle, maxHorizontalAngle);
 		if (orbitAngles.y < 0f)
 		{
 			orbitAngles.y += 360f;

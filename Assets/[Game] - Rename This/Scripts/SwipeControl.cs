@@ -8,10 +8,9 @@ public class SwipeControl : MonoBehaviour
     public GameObject m_rendererPrefab;
     private GameObject m_currentRenderer;
 
-    private GameObject clone;
+
     public GameObject transformPanel;
-    public GameObject wingsPoint;
-    private GameObject wingsParent;
+    private GameObject wingsPoint;
 
     private int layer_mask;
     private bool isDrawComeFromOutside;
@@ -20,33 +19,27 @@ public class SwipeControl : MonoBehaviour
     public Material material;
     public Mesh Wallmesh;
 
+    private Vector3 closest;
+    private float closestDist;
+
     private Vector3 startPos;
     private Vector3 lastPos;
-    private Plane m_cast;
-    private Vector3 m_origin;
     [SerializeField] private Camera m_camera;
 
-    private MeshScaleModifier MeshScaleModifier = new MeshScaleModifier();
     private int pointCount;
-    private int lineCount;
     private SplineComputer spline;
     private SplinePoint[] points;
-    private Dreamteck.Splines.SplineMesh splineMesh;
 
-    private Transform[] wingsList;
-    private void Awake()
+    private void Start()
     {
-        layer_mask = LayerMask.GetMask("Ground");
-        lineCount = 0;
+        layer_mask = LayerMask.GetMask("DrawPanel");
+     
         pointCount = 0;
-        m_cast = new Plane(m_camera.transform.forward * -1, this.transform.position);
-        // NavMeshSurface.UpdateNavMesh(NavMeshSurface.navMeshData);
+        
         //obstacleInRender = (GameObject)PoolingSystem.Instance.InstantiateAPS("DrawCube");
         // m_rendererPrefab = (GameObject) PoolingSystem.Instance.InstantiateAPS("SwipeDraw");
 
     }
-
-
 
     private void FixedUpdate()
     {
@@ -61,10 +54,10 @@ public class SwipeControl : MonoBehaviour
                 CreatSplineObject(hit);
                 StartDrawing(hit);
                 //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
-                
+                wingsPoint = GameObject.FindWithTag("WingPoint");
+                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, wingsPoint.transform);
             }
-
-            m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, wingsPoint.transform);
+         
         }
         else if (IsInput(TouchPhase.Moved) && LevelManager.Instance.IsLevelStarted && !isDrawComeFromOutside)
         {
@@ -78,29 +71,32 @@ public class SwipeControl : MonoBehaviour
                 if (Vector3.Distance(lastPos, hit.point) >= 0.5f && pointCount < points.Length)
                 {
                     DrawWithMove(hit);
-                    //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
 
                 }
-
-                
-                
-
+                if (Mathf.Abs(transformPanel.transform.position.x - hit.point.x) < closestDist)
+                {
+                    closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
+                    closest = hit.point;
+                }
+                //2D draw with MouseMove
+                m_currentRenderer.transform.position = hit.point;
+                m_currentRenderer.layer = 12;
             }
         }
         else if (IsInput(TouchPhase.Ended))
         {
-
             EndOfDraw();
-
         }
     }
 
-
     void CreatSplineObject(RaycastHit hit)
     {
+        if (createdDrawObj != null)
+        {
+            Destroy(createdDrawObj);
+        }
         startPos = hit.point;
         lastPos = startPos;
-        clone = null;
         //Creation of base object for draw, Change layer for being sure it s not drawble on itself , Add Components
         createdDrawObj = (GameObject)Instantiate(drawObjPref, startPos, Quaternion.identity, transformPanel.transform);
         createdDrawObj.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -115,13 +111,17 @@ public class SwipeControl : MonoBehaviour
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
-        splineMesh.GetChannel(0).minScale = new Vector3(0.1f, 1f, 0.1f);
-        splineMesh.GetChannel(0).maxScale = new Vector3(0.1f, 1f, 0.1f);
+        splineMesh.GetChannel(0).minScale = new Vector3(1f,0.3f, 0.1f);
+        splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.3f, 0.1f);
         points = new SplinePoint[50];
         spline.type = Spline.Type.BSpline;
         spline.sampleMode = SplineComputer.SampleMode.Uniform;
         spline.customNormalInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
         spline.customValueInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+
+
+        closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
+        closest = hit.point;
 
     }
     void StartDrawing(RaycastHit hit)
@@ -135,22 +135,17 @@ public class SwipeControl : MonoBehaviour
         points[pointCount].color = Color.white;
 
         spline.SetPoint(pointCount, points[pointCount], SplineComputer.Space.World);
+
         lastPos = hit.point;
         pointCount++;
-
-        
         isDrawComeFromOutside = false;
 
-       
-
-
-        
     }
+   
     void DrawWithMove(RaycastHit hit)
     {
         if (!isDrawComeFromOutside)
         {
-            
             //Placing 3D draw points and mesh object creation
             points[pointCount] = new SplinePoint();
             points[pointCount].position = hit.point;
@@ -163,45 +158,42 @@ public class SwipeControl : MonoBehaviour
             lastPos = hit.point;
             pointCount++;
 
-            //2D draw with MouseMove
-            m_currentRenderer.transform.position = hit.point;
-            m_currentRenderer.layer = 12;
+           
         }
     }
 
     void EndOfDraw()
-    {  
+    {
+        Rigidbody wingRigid =  createdDrawObj.AddComponent<Rigidbody>();
+        createdDrawObj.AddComponent<MeshCollider>();
+        wingRigid.isKinematic = true;
+        wingRigid.useGravity = false;
+        wingRigid.constraints = RigidbodyConstraints.FreezeAll;
+       
         //Make disable all children of wingsPoint
-        wingsList = wingsPoint.GetComponentsInChildren<Transform>();
-
+        wingsPoint = GameObject.FindWithTag("WingPoint");
         if (wingsPoint.transform.childCount != 0)
         {
             for (int i = 0; i < wingsPoint.transform.childCount; i++)
             {
                 Destroy(wingsPoint.transform.GetChild(i).gameObject);
-                //Or Destroy
             }
         }
-
-
+        
+        GameObject transporter = (GameObject)Instantiate(drawObjPref, closest, Quaternion.identity);
+        createdDrawObj.transform.parent = transporter.transform;
+        transporter.transform.position = wingsPoint.transform.position;
+        transporter.transform.parent = wingsPoint.transform;
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
 
-        //create copy of transformPanel and change position to on Fligt Wings
-        clone = Instantiate(transformPanel, wingsPoint.transform.position, Quaternion.Euler(Vector3.zero));
-        clone.transform.position = wingsPoint.transform.position;
-        clone.transform.parent = wingsPoint.transform;
-
-        clone.transform.GetChild(clone.transform.childCount-1).transform.localPosition =
-            new Vector3(clone.transform.GetChild(clone.transform.childCount - 1).transform.position.x,0,0);
-        
-
-        
+        wingRigid.MovePosition(wingsPoint.transform.position);
+        wingRigid.MoveRotation(wingsPoint.transform.rotation);
         pointCount = 0;
 
-        //Destroy original draw obj. and 2d render object
+        //Destroy 2d render object on panel
         Destroy(m_currentRenderer);
-        Destroy(createdDrawObj);
+       
     }
     private bool IsInput(TouchPhase phase)
     {

@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class PlayerBrain : CharacterBrainBase
 {
-
+    private Vector3 direction;
 
     private void Start()
     {
         gameObject.transform.tag = "Player";
+        direction = Vector3.forward;
+        gameObject.AddComponent<Rigidbody>();
     }
     public override void Logic()
     {
-        CharacterController.Move(new Vector3(InputManager.Instance.Joystick.Direction.x, 0f, InputManager.Instance.Joystick.Direction.y));
+
+        gameObject.GetComponent<Rigidbody>().velocity = (Vector3.forward  *10f);
+            
     }
 
 #if UNITY_EDITOR

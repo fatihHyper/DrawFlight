@@ -170,7 +170,7 @@ public class SwipeControl : MonoBehaviour
     }
 
     void EndOfDraw()
-    {
+    {  
         //Make disable all children of wingsPoint
         wingsList = wingsPoint.GetComponentsInChildren<Transform>();
 

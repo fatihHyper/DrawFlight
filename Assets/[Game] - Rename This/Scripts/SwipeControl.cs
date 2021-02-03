@@ -33,7 +33,7 @@ public class SwipeControl : MonoBehaviour
     private SplinePoint[] points;
     private Dreamteck.Splines.SplineMesh splineMesh;
 
-
+    private Transform[] wingsList;
     private void Awake()
     {
         layer_mask = LayerMask.GetMask("Ground");
@@ -141,16 +141,7 @@ public class SwipeControl : MonoBehaviour
         
         isDrawComeFromOutside = false;
 
-        //Make disable all children of wingsPoint
-        Transform[] wingsList = wingsPoint.GetComponentsInChildren<Transform>();
-
-        for (int i = 0; i < wingsList.Length; i++)
-        {
-            wingsList[i].gameObject.SetActive(false);
-            //Or Destroy
-        }
-        //Control for wingsPoint is enable
-        wingsPoint.SetActive(true);
+       
 
 
         
@@ -180,6 +171,19 @@ public class SwipeControl : MonoBehaviour
 
     void EndOfDraw()
     {
+        //Make disable all children of wingsPoint
+        wingsList = wingsPoint.GetComponentsInChildren<Transform>();
+
+        if (wingsPoint.transform.childCount != 0)
+        {
+            for (int i = 0; i < wingsPoint.transform.childCount; i++)
+            {
+                Destroy(wingsPoint.transform.GetChild(i).gameObject);
+                //Or Destroy
+            }
+        }
+
+
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
 
@@ -188,7 +192,8 @@ public class SwipeControl : MonoBehaviour
         clone.transform.position = wingsPoint.transform.position;
         clone.transform.parent = wingsPoint.transform;
 
-        clone.transform.GetChild(0).transform.localPosition = new Vector3(createdDrawObj.transform.position.x, 0, 0);
+        clone.transform.GetChild(clone.transform.childCount-1).transform.localPosition =
+            new Vector3(clone.transform.GetChild(clone.transform.childCount - 1).transform.position.x,0,0);
         
 
         

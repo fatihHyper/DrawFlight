@@ -250,7 +250,7 @@ MonoBehaviour:
     AutoDestroy: 1
     clones: []
   - ID: Car
-    SourcePrefab: {fileID: 7233138772322773911, guid: 628c45e0c0f4908409875a69d789fd23,
+    SourcePrefab: {fileID: 4154634690419053337, guid: 62638ba72e137ec4d83430fbb8d970f4,
       type: 3}
     MinNumberOfObject: 0
     AllowGrow: 1

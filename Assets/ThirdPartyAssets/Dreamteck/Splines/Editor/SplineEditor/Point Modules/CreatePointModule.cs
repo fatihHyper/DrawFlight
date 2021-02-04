@@ -10,10 +10,10 @@ using System.Collections.Generic;
         public enum AppendMode { Beginning, End }
         public enum PlacementMode { YPlane, XPlane, ZPlane, CameraPlane, Surface, Insert }
         public enum NormalMode { Default, LookAtCamera, AlignWithCamera, Calculate, Left, Right, Up, Down, Forward, Back }
-        protected PlacementMode placementMode = PlacementMode.Surface;
+        protected PlacementMode placementMode = PlacementMode.YPlane;
         public AppendMode appendMode = 0;
         public float offset = 0f;
-        public NormalMode normalMode = NormalMode.Up;
+        public NormalMode normalMode = NormalMode.Default;
         public LayerMask surfaceLayerMask = new LayerMask();
         protected Spline visualizer;
         protected Camera editorCamera;

@@ -9,4 +9,5 @@ public static class EventManager
 {
     public static UnityEvent OnCorrectAnswer = new UnityEvent();
     public static UnityEvent OnAskQuestion = new UnityEvent();
+    public static UnityEvent FirstDrawExist = new UnityEvent();
 }

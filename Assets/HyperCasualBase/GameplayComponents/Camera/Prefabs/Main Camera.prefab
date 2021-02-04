@@ -177,8 +177,8 @@ MonoBehaviour:
   focusRadius: 5
   focusCentering: 0
   rotationSpeed: 1
-  minVerticalAngle: 35
-  maxVerticalAngle: 35
+  minVerticalAngle: 15
+  maxVerticalAngle: 15
   minHorizontalAngle: 0
   maxHorizontalAngle: 0
   alignDelay: 5

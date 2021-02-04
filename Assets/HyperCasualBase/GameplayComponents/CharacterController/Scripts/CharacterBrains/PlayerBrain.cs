@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class PlayerBrain : CharacterBrainBase
 {
-    private Vector3 direction;
+    private float speed;
+    private float rotationSpeed;
 
+    private Rigidbody _planeRigid;
     private void Start()
     {
+        rotationSpeed = 10f;
+        speed = 1000f;
         gameObject.transform.tag = "Player";
-        direction = Vector3.forward;
-        gameObject.AddComponent<Rigidbody>();
+        _planeRigid =  gameObject.AddComponent<Rigidbody>();
     }
+   
     public override void Logic()
     {
+        transform.Rotate(-0.5f * rotationSpeed * Time.deltaTime, 0, 0);
 
-        gameObject.GetComponent<Rigidbody>().velocity = (Vector3.forward  *10f);
-            
     }
+    private void FixedUpdate()
+    {
+        _planeRigid.AddForce(transform.forward * speed * Time.deltaTime);
 
+    }
 #if UNITY_EDITOR
     private void Update()
     {

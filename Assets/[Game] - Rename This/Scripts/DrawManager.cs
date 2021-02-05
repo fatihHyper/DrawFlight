@@ -44,9 +44,6 @@ public class DrawManager : MonoBehaviour
     public float splineLength;
 
 
-    private static FlightController flightController;
-    private static FlightController FlightController { get { return (flightController == null) ? flightController = FindObjectOfType<FlightController>() : flightController; } set { flightController = value; } }
-
 
 
     private void Start()
@@ -190,7 +187,6 @@ public class DrawManager : MonoBehaviour
         double travel = spline.Travel(0, splineLength / 2f, Spline.Direction.Forward);
         Vector3 middle = spline.EvaluatePosition(travel);
 
-        Debug.Log("Middle =" + middle);
 
         if ( middle.x > 1)
         {
@@ -236,12 +232,7 @@ public class DrawManager : MonoBehaviour
        
     }
 
-    private void OnDrawGizmos()
-    {
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(middle, 0.75f);
-    }
     private bool IsInput(TouchPhase phase)
     {
         switch (phase)

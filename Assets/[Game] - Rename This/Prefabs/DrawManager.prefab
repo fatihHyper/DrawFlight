@@ -51,7 +51,13 @@ MonoBehaviour:
     type: 3}
   material: {fileID: 2100000, guid: 6ff757abf7023c94ead17e065b3b7e4a, type: 2}
   Wallmesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  transporter: {fileID: 0}
   m_camera: {fileID: 0}
+  direction: 
+  _leftSideWeight: 0
+  _rightSideWeight: 0
+  middle: {x: 0, y: 0, z: 0}
+  splineLength: 0
 --- !u!114 &2093608830
 MonoBehaviour:
   m_ObjectHideFlags: 0

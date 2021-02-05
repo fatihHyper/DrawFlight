@@ -12,23 +12,20 @@ public class CameraController : Singleton<CameraController>
 
 	private Vector3 focus { get { return GetCenterPosition(); } }
 
-	[SerializeField, Range(1f, 100f)]
-	float distance = 5f; 
+	[SerializeField, Range(1f, 40f)]
+	float distance = 5f;
 
 	[SerializeField, Min(0f)]
 	float focusRadius = 5f;
 
 	[SerializeField, Range(0f, 1f)]
-	float focusCentering = 0.5f; 
+	float focusCentering = 0.5f;
 
 	[SerializeField, Range(1f, 360f)]
 	float rotationSpeed = 90f;
 
 	[SerializeField, Range(-89f, 89f)]
 	float minVerticalAngle = -45f, maxVerticalAngle = 45f;
-
-	[SerializeField, Range(-89f, 89f)]
-	float minHorizontalAngle = -45f, maxHorizontalAngle = 45f;
 
 	[SerializeField, Min(0f)]
 	float alignDelay = 5f;
@@ -89,13 +86,13 @@ public class CameraController : Singleton<CameraController>
 	}
 
 	public void AddTarget(ICameraTarget cameraTarget)
-    {
+	{
 		if (!targets.Contains(cameraTarget))
 			targets.Add(cameraTarget);
-    }
+	}
 
 	public void RemoveTarget(ICameraTarget cameraTarget)
-    {
+	{
 		if (targets.Contains(cameraTarget))
 			targets.Remove(cameraTarget);
 	}
@@ -110,6 +107,7 @@ public class CameraController : Singleton<CameraController>
 		if (AutomaticRotation())
 		{
 			ConstrainAngles();
+			//
 			lookRotation = Quaternion.Euler(orbitAngles);
 		}
 		else
@@ -133,12 +131,13 @@ public class CameraController : Singleton<CameraController>
 		))
 		{
 			rectPosition = castFrom + castDirection * hit.distance;
-			lookPosition = rectPosition - rectOffset;
+			lookPosition = new Vector3(0, 0, 0);
 		}
+
 		transform.SetPositionAndRotation(lookPosition, lookRotation);
 	}
 
-	
+
 
 	void UpdateFocusPoint()
 	{
@@ -164,23 +163,23 @@ public class CameraController : Singleton<CameraController>
 		}
 	}
 
-    bool ManualRotation()
-    {
-        Vector2 input = new Vector2(
-            Input.GetAxis("Vertical"),
-            Input.GetAxis("Horizontal")
-        );
-        const float e = 0.001f;
-        if (input.x < -e || input.x > e || input.y < -e || input.y > e)
-        {
-            orbitAngles += rotationSpeed * Time.unscaledDeltaTime * input;
-            lastManualRotationTime = Time.unscaledTime;
-            return true;
-        }
-        return false;
-    }
+	bool ManualRotation()
+	{
+		Vector2 input = new Vector2(
+			Input.GetAxis("Vertical"),
+			Input.GetAxis("Horizontal")
+		);
+		const float e = 0.001f;
+		if (input.x < -e || input.x > e || input.y < -e || input.y > e)
+		{
+			orbitAngles += rotationSpeed * Time.unscaledDeltaTime * input;
+			lastManualRotationTime = Time.unscaledTime;
+			return true;
+		}
+		return false;
+	}
 
-    bool AutomaticRotation()
+	bool AutomaticRotation()
 	{
 		if (Time.unscaledTime - lastManualRotationTime < alignDelay)
 		{
@@ -218,14 +217,12 @@ public class CameraController : Singleton<CameraController>
 	{
 		orbitAngles.x =
 			Mathf.Clamp(orbitAngles.x, minVerticalAngle, maxVerticalAngle);
-
-		orbitAngles.y =
-			Mathf.Clamp(orbitAngles.y, minHorizontalAngle, maxHorizontalAngle);
-		if (orbitAngles.y < 0f)
+		orbitAngles.y = -30f;
+		if (orbitAngles.y < -30f)
 		{
 			orbitAngles.y += 360f;
 		}
-		else if (orbitAngles.y >= 360f)
+		else if (orbitAngles.y >= 330f)
 		{
 			orbitAngles.y -= 360f;
 		}
@@ -238,28 +235,28 @@ public class CameraController : Singleton<CameraController>
 	}
 
 	public Vector3 GetCenterPosition()
-    {
+	{
 		if (targets.Count == 0)
 			return Vector3.zero;
 
-        var bounds = new Bounds(targets[0].transform.position, Vector3.zero);
-        for (var i = 1; i < targets.Count; i++)
-            bounds.Encapsulate(targets[i].transform.position);
+		var bounds = new Bounds(targets[0].transform.position, Vector3.zero);
+		for (var i = 1; i < targets.Count; i++)
+			bounds.Encapsulate(targets[i].transform.position);
 
 
-        return bounds.center;
-    }
+		return bounds.center;
+	}
 
 	private bool isShaking = false;
 
 	[Button]
 	public void ShakeCamera(float power = 2f, float duration = 0.2f, int vibro = 2, float elasitcy = 0.5f)
-    {
+	{
 		if (isShaking)
 			return;
 
 		isShaking = true;
 		transform.DOPunchRotation(Vector3.forward * power, duration, vibro, elasitcy).OnComplete(() => isShaking = false);
 		HapticManager.Haptic(HapticTypes.RigidImpact);
-    }
+	}
 }

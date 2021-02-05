@@ -2,16 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Dreamteck.Splines;
 
 public class FlightController : MonoBehaviour
 {
     private Rigidbody _planeRigid;
     private float _speed;
     private float _rotationSpeed;
-
-    private bool _isFirstDeparture;
+    [HideInInspector]
+    public bool _isTurn;
     private bool _isFirstDraw;
-    private string direction;
+    private string rotationInfo;
+    [HideInInspector]
+    public Vector3 direction;
+
 
     private static DrawManager drawManager;
     private static DrawManager DrawManager { get { return (drawManager == null) ? drawManager = FindObjectOfType<DrawManager>() : drawManager; } set { drawManager = value; } }
@@ -19,7 +23,7 @@ public class FlightController : MonoBehaviour
     private bool isRightWeight;
 
     private Transform FlightTransform;
-
+    private SplineFollower splineFollower;
     private Quaternion rotation;
     private void OnEnable()
     {
@@ -36,32 +40,35 @@ public class FlightController : MonoBehaviour
 
     private void Start()
     {
+        //splineFollower = gameObject.GetComponent<SplineFollower>();
         _planeRigid = gameObject.GetComponent<Rigidbody>();
         _speed = 800f;
-        _rotationSpeed = 60f;
-        _isFirstDeparture = true;
+        _rotationSpeed = 80f;
         rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-
+        //_isTurn = false;
+       
     }
 
     private void FixedUpdate()
     {
         
+
         if (_isFirstDraw && LevelManager.Instance.IsLevelStarted)
         {
-            direction = DrawManager.direction;
+            rotationInfo = DrawManager.direction;
 
-
+                
                 if (gameObject.transform.position.y < 20)
                 {
                     if (DrawManager.splineLength > 1)
                     {
                         transform.Rotate(-0.05f * _rotationSpeed * 2 * Time.deltaTime, 0, 0);
+                       
                     }
                     else
                     {
                         transform.Rotate(0.05f * _rotationSpeed * 2 *  Time.deltaTime, 0, 0);
-
+                      
                     }
 
                 }
@@ -73,39 +80,47 @@ public class FlightController : MonoBehaviour
                     }
                     else
                     {
-                        
-                        _planeRigid.MovePosition(new Vector3(gameObject.transform.position.x, 20, transform.position.z));
-                        GetRotation(direction);
-                        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.deltaTime * 1f);
-                       
+                        _planeRigid.MovePosition(new Vector3(transform.position.x, 20, transform.position.z));
+                        GetRotation(rotationInfo);
+                        transform.localRotation =  Quaternion.Slerp(transform.localRotation, rotation, Time.deltaTime );
+                    
                     }
                 
-            }
-            _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;
+                }
+
+            direction = transform.TransformDirection(Vector3.forward);
+            _planeRigid.velocity = direction * _speed * 2 * Time.deltaTime;
+            
+            
+            
 
         }
     }
 
-    void GetRotation(string direction)
+    void GetRotation(string rotationInfo)
     {
-        Debug.Log(direction);
-        switch (direction)
-        {
+            switch (rotationInfo)
+            {
 
-            case "Left":
-                rotation = Quaternion.Euler(Vector3.forward * 20);
+                case "Left":
 
-                break;
-            case "Right":
-                rotation = Quaternion.Euler(Vector3.forward * -20);
-                break;
-            case "Forward":
-                rotation = Quaternion.Euler(Vector3.zero);
-                break;
+                    rotation = Quaternion.Euler(Vector3.forward * 20);
+
+                    break;
+                case "Right":
+                    rotation = Quaternion.Euler(Vector3.forward * -20);
+                    break;
+                case "Forward":
+                    rotation = Quaternion.Euler(Vector3.forward);
+                    break;
+
+                default:
+                    break;
+            }
+        
             
-            default:
-                break;
-        }
+        
+        
     }
    
 }

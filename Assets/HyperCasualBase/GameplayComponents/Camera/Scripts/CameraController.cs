@@ -217,7 +217,7 @@ public class CameraController : Singleton<CameraController>
 	{
 		orbitAngles.x =
 			Mathf.Clamp(orbitAngles.x, minVerticalAngle, maxVerticalAngle);
-		orbitAngles.y = -30f;
+		//orbitAngles.y = -30f;
 		if (orbitAngles.y < -30f)
 		{
 			orbitAngles.y += 360f;

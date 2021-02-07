@@ -52,9 +52,6 @@ public class DrawManager : MonoBehaviour
      
         pointCount = 0;
         
-        //obstacleInRender = (GameObject)PoolingSystem.Instance.InstantiateAPS("DrawCube");
-        // m_rendererPrefab = (GameObject) PoolingSystem.Instance.InstantiateAPS("SwipeDraw");
-
     }
 
     private void FixedUpdate()
@@ -63,7 +60,7 @@ public class DrawManager : MonoBehaviour
         RaycastHit hit;
         Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-        if (Physics.Raycast(_ray, out hit, layer_mask))
+        if (Physics.Raycast(_ray, out hit,1000f ,layer_mask) )
         {
             if (IsInput(TouchPhase.Began) && LevelManager.Instance.IsLevelStarted)
             {
@@ -71,8 +68,8 @@ public class DrawManager : MonoBehaviour
 
                 CreatSplineObject(hit);
                 StartDrawing(hit);
-                //PoolingSystem.Instance.InstantiateAPS("StarExplosion", hit.point);
                 wingsPoint = GameObject.FindWithTag("WingPoint");
+
                 m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, wingsPoint.transform);
 
 
@@ -99,13 +96,13 @@ public class DrawManager : MonoBehaviour
             }
             else if (IsInput(TouchPhase.Ended))
             {
+                if (Vector3.Distance(m_currentRenderer.transform.position, hit.point) < 0.1f)
+                    Destroy(m_currentRenderer);
+                
                 EndOfDraw();
             }
         }
-        else
-        {
-            return;
-        }
+        
     }
     
     void CreatSplineObject(RaycastHit hit)
@@ -188,11 +185,11 @@ public class DrawManager : MonoBehaviour
         Vector3 middle = spline.EvaluatePosition(travel);
 
 
-        if ( middle.x > 1)
+        if ( middle.x > 0.5f)
         {
             direction = "Right";
         }
-        else if (middle.x < -1)
+        else if (middle.x < -0.5f)
         {
             direction = "Left";
         }
@@ -201,11 +198,6 @@ public class DrawManager : MonoBehaviour
             direction = "Forward";
         }
 
-        //createdDrawObj.AddComponent<MeshCollider>();
-        
-
-
-        EventManager.FirstDrawExist.Invoke();
         //Make disable all children of wingsPoint
         wingsPoint = GameObject.FindWithTag("WingPoint");
         if (wingsPoint.transform.childCount != 0)
@@ -229,7 +221,8 @@ public class DrawManager : MonoBehaviour
         pointCount = 0;
         //Destroy 2d render object on panel
         Destroy(m_currentRenderer);
-       
+
+        EventManager.FirstDrawExist.Invoke();
     }
 
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9010468461038569412}
   m_Layer: 12
   m_Name: DrawPanel
-  m_TagString: Untagged
+  m_TagString: DrawPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7787657236764889009}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.01, y: -3.476, z: 11.175}
-  m_LocalScale: {x: 2.0560243, y: 1, z: 1.8208077}
+  m_LocalScale: {x: 2.0560243, y: 1, z: 1.8208082}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0

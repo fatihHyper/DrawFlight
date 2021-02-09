@@ -84,19 +84,23 @@ public class DrawManager : MonoBehaviour
         {
             if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
             {
-                if (Vector3.Distance(lastPos, hit.point) >= 1f && pointCount < points.Length)
+                if (points != null)
                 {
-                    DrawWithMove(hit);
+                    if (Vector3.Distance(lastPos, hit.point) >= 1f && pointCount < points.Length)
+                    {
+                        DrawWithMove(hit);
 
+                    }
+                    if (Mathf.Abs(transformPanel.transform.position.x - hit.point.x) < closestDist)
+                    {
+                        closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
+                        closest = hit.point;
+                    }
+                    //2D draw with MouseMove
+                    m_currentRenderer.transform.position = hit.point;
+                    m_currentRenderer.layer = 12;
                 }
-                if (Mathf.Abs(transformPanel.transform.position.x - hit.point.x) < closestDist)
-                {
-                    closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
-                    closest = hit.point;
-                }
-                //2D draw with MouseMove
-                m_currentRenderer.transform.position = hit.point;
-                m_currentRenderer.layer = 12;
+                
             }
         }
         else if (IsInput(TouchPhase.Ended))
@@ -178,7 +182,7 @@ public class DrawManager : MonoBehaviour
 
     void EndOfDraw()
     {
-
+        if (spline == null) return;
         splineLength = spline.CalculateLength();
         double travel = spline.Travel(0, splineLength / 2f, Spline.Direction.Forward);
         Vector3 middle = spline.EvaluatePosition(travel);

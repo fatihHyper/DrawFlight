@@ -81,7 +81,7 @@ public class FlightController : MonoBehaviour
             {
                 //transform.LookAt(points[checkPointNow].position - new Vector3(0, 100, 0));
                 transform.Rotate( 0.5f * 100 * Time.deltaTime, 0, 0);
-                _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;
+               // _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;
             }
             else
             {

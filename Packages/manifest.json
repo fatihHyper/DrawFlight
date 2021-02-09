@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.coffee.unmask": "https://github.com/mob-sakai/UnmaskForUGUI.git",
     "com.google.firebase.analytics": "7.0.2",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.collab-proxy": "1.2.16",

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5842069557579671902}
   - component: {fileID: 4652935340834247824}
-  - component: {fileID: 2093608830}
   - component: {fileID: 574241159}
   m_Layer: 2
   m_Name: DrawManager
@@ -59,21 +58,6 @@ MonoBehaviour:
   _rightSideWeight: 0
   middle: {x: 0, y: 0, z: 0}
   splineLength: 0
---- !u!114 &2093608830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2929169386398958106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e687fb7ae103a5745994e9f3f3062c0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Brush: {fileID: 8300274247265581926, guid: eb60091c7fd36704bacd266ac9a97e25, type: 3}
-  BrushSize: 0.01
-  RTexture: {fileID: 8400000, guid: 7fb7ce18409b64d00a227dd3b296c36b, type: 2}
 --- !u!54 &574241159
 Rigidbody:
   m_ObjectHideFlags: 0

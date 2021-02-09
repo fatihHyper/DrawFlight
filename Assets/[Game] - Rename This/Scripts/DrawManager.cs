@@ -35,10 +35,6 @@ public class DrawManager : MonoBehaviour
     [HideInInspector]
     public string direction;
     [HideInInspector]
-    public float _leftSideWeight;
-    [HideInInspector]
-    public float _rightSideWeight;
-    [HideInInspector]
     public Vector3 middle;
     [HideInInspector]
     public float splineLength;
@@ -60,23 +56,34 @@ public class DrawManager : MonoBehaviour
         RaycastHit hit;
         Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-        if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
+
+
+        if (IsInput(TouchPhase.Began) && LevelManager.Instance.IsLevelStarted)
         {
-            if (IsInput(TouchPhase.Began) && LevelManager.Instance.IsLevelStarted)
+            if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
             {
-
-
                 CreatSplineObject(hit);
                 StartDrawing(hit);
-                wingsPoint = GameObject.FindWithTag("WingPoint");
 
-                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, wingsPoint.transform);
+                if (gameObject.transform.childCount != 0)
+                {
+                    for (int i = 0; i < gameObject.transform.childCount; i++)
+                    {
+                        Destroy(transform.GetChild(i).gameObject);
+                    }
+                }
 
-
+                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, transform);
             }
-            else if (IsInput(TouchPhase.Moved) && LevelManager.Instance.IsLevelStarted && !isDrawComeFromOutside)
-            {
 
+
+
+
+        }
+        else if (IsInput(TouchPhase.Moved) && LevelManager.Instance.IsLevelStarted && !isDrawComeFromOutside)
+        {
+            if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
+            {
                 if (Vector3.Distance(lastPos, hit.point) >= 1f && pointCount < points.Length)
                 {
                     DrawWithMove(hit);
@@ -90,25 +97,17 @@ public class DrawManager : MonoBehaviour
                 //2D draw with MouseMove
                 m_currentRenderer.transform.position = hit.point;
                 m_currentRenderer.layer = 12;
-
-
-
             }
-            else if (IsInput(TouchPhase.Ended))
-            {
-                if (Vector3.Distance(m_currentRenderer.transform.position, hit.point) < 0.1f)
-                    Destroy(m_currentRenderer);
-
-                EndOfDraw();
-            }
+        }
+        else if (IsInput(TouchPhase.Ended))
+        {
+            EndOfDraw();
         }
 
     }
 
     void CreatSplineObject(RaycastHit hit)
     {
-        _leftSideWeight = 0;
-        _rightSideWeight = 0;
 
         startPos = hit.point;
         lastPos = startPos;

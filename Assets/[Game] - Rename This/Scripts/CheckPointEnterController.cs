@@ -11,7 +11,6 @@ public class CheckPointEnterController : MonoBehaviour
         if (other.tag == "Player")
         {
             EventManager.NextCheckPoint.Invoke();
-            gameObject.SetActive(false);
         }
        
     }

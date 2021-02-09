@@ -15,26 +15,20 @@ public class FlightController : MonoBehaviour
     private string rotationInfo;
     [HideInInspector]
     public Vector3 direction;
-
-    public GameObject CheckPointPref;
-
-
-    private SplinePoint[] points;
-    private int checkPointNow;
+   
+    public SplinePoint[] points;
+    public int checkPointNow;
     private Vector3 rotation;
-    private Quaternion targetRotation;
-    private int localRotationZ;
-    private int localRotationX;
 
     private static DrawManager drawManager;
     private static DrawManager DrawManager { get { return (drawManager == null) ? drawManager = FindObjectOfType<DrawManager>() : drawManager; } set { drawManager = value; } }
 
     public SplineComputer splineComputer;
-
+    
     private void OnEnable()
     {
-
-        EventManager.FirstDrawExist.AddListener(() => _isFirstDraw = true);
+       
+        EventManager.FirstDrawExist.AddListener(() => _isFirstDraw = true );
         EventManager.NextCheckPoint.AddListener(() => checkPointNow--);
 
     }
@@ -51,116 +45,106 @@ public class FlightController : MonoBehaviour
 
         points = splineComputer.GetPoints();
         _planeRigid = gameObject.GetComponent<Rigidbody>();
-        _speed = 1200;
+        _speed = 1200f;
         _rotationSpeed = 80f;
         rotation = new Vector3(0, 0, 0);
-        checkPointNow = splineComputer.pointCount - 1;
-
-        for (int i = 0; i < points.Length; i++)
-        {
-
-            Instantiate(CheckPointPref, points[i].position, Quaternion.identity);
-        }
-
-
-
+        checkPointNow = splineComputer.pointCount-1;
     }
 
     private void FixedUpdate()
     {
 
         Debug.Log(checkPointNow);
-
         if (_isFirstDraw && LevelManager.Instance.IsLevelStarted)
         {
-
             rotationInfo = DrawManager.direction;
 
+                
+                    if (DrawManager.splineLength < 1)
+                    {
+                        transform.LookAt(points[checkPointNow].position - new Vector3(0,60,0));
+                        if (rotation.x < 45)
+                        {
+                            rotation += new Vector3(1, 0, 0);
+                        }
+                        else
+                        {
+                            rotation = new Vector3(45, 0, 0);
+                        }
+                        _planeRigid.velocity = transform.forward * _speed * Time.deltaTime;
+                    }
+                    else
+                    {
 
-            if (DrawManager.splineLength < 1)
-            {
-                //transform.LookAt(points[checkPointNow].position - new Vector3(0, 100, 0));
-                transform.Rotate( 0.5f * 100 * Time.deltaTime, 0, 0);
-                _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;
-            }
-            else
-            {
-                GetRotation(rotationInfo);
-                FollowTargetWithRotation(points[checkPointNow].position, 0f, _speed);
-               
-
-            }
-
+                        FollowTargetWithRotation(points[checkPointNow].position, 0f, _speed);
+                        GetRotation(rotationInfo);
+                    
+                    }
+                
         }
     }
 
     void FollowTargetWithRotation(Vector3 target, float distanceToStop, float speed)
     {
-        if (Vector3.Distance(transform.position, target) > distanceToStop && checkPointNow > -1)
+        if (Vector3.Distance(transform.position, target) > distanceToStop)
         {
-            Vector3 targetDirection = (target - transform.position).normalized;
-            targetRotation = Quaternion.LookRotation(targetDirection);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 0.6f );
-
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, localRotationZ);
-
-            _planeRigid.velocity = transform.forward * speed *2  * Time.deltaTime;
+            transform.LookAt(target);
+            transform.rotation *= Quaternion.Euler(rotation);
+            _planeRigid.velocity = transform.forward * speed * Time.deltaTime;
         }
-        else if (Vector3.Distance(transform.position, points[checkPointNow].position) <= 0.5f && checkPointNow <= -1)
-        {
-            transform.LookAt(Vector3.forward);
-            _planeRigid.isKinematic = true;
-            
-        }
-
     }
 
 
     void GetRotation(string rotationInfo)
     {
-        //Get rotation info and rotate plane smoothly
-        switch (rotationInfo)
-        {
+            switch (rotationInfo)
+            {
 
-            case "Left":
-                if (localRotationZ <40)
+                case "Left":
+
+                if (rotation.z < 45)
                 {
-                    localRotationZ++;
-                }
-                
-                break;
-            case "Right":
-                if (localRotationZ > -40)
-                {
-                    localRotationZ--;
-                }
-                
-                break;
-            case "Forward":
-                if (localRotationZ > 0)
-                {
-                    localRotationZ--;
-                }
-                else if (localRotationZ < 0)
-                {
-                    localRotationZ++;
+                    rotation += new Vector3(0, 0, 1);
                 }
                 else
                 {
-
-                    localRotationZ = 0;
+                    rotation = new Vector3(0, 0, 45);
                 }
-
-
+                    
+                    break;
+                case "Right":
+                if (rotation.z > -45)
+                {
+                    rotation -= new Vector3(0, 0, 1);
+                }
+                else
+                {
+                    rotation = new Vector3(0, 0, -45);
+                }
                 break;
+                case "Forward":
+                if (rotation.z > 0)
+                {
+                    rotation -= new Vector3(0, 0, 1);
+                }
+                else if (rotation.z < 0)
+                {
+                    rotation += new Vector3(0, 0, 1);
+                }
+                else
+                {
+                    rotation = new Vector3(0, 0, 0);
+                }
+                
+                    break;
 
-            default:
-                break;
-        }
-
-
-
-
+                default:
+                    break;
+            }
+        
+            
+        
+        
     }
-
+   
 }

@@ -49,18 +49,18 @@ public class DrawManager : MonoBehaviour
     private void Start()
     {
         layer_mask = LayerMask.GetMask("DrawPanel");
-
+     
         pointCount = 0;
-
+        
     }
 
     private void FixedUpdate()
     {
-
+        
         RaycastHit hit;
         Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-        if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
+        if (Physics.Raycast(_ray, out hit,1000f ,layer_mask) )
         {
             if (IsInput(TouchPhase.Began) && LevelManager.Instance.IsLevelStarted)
             {
@@ -90,7 +90,7 @@ public class DrawManager : MonoBehaviour
                 //2D draw with MouseMove
                 m_currentRenderer.transform.position = hit.point;
                 m_currentRenderer.layer = 12;
-
+               
 
 
             }
@@ -98,13 +98,13 @@ public class DrawManager : MonoBehaviour
             {
                 if (Vector3.Distance(m_currentRenderer.transform.position, hit.point) < 0.1f)
                     Destroy(m_currentRenderer);
-
+                
                 EndOfDraw();
             }
         }
-
+        
     }
-
+    
     void CreatSplineObject(RaycastHit hit)
     {
         _leftSideWeight = 0;
@@ -126,7 +126,7 @@ public class DrawManager : MonoBehaviour
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
-        splineMesh.GetChannel(0).minScale = new Vector3(1f, 0.3f, 0.1f);
+        splineMesh.GetChannel(0).minScale = new Vector3(1f,0.3f, 0.1f);
         splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.3f, 0.1f);
         points = new SplinePoint[100];
         spline.type = Spline.Type.BSpline;
@@ -141,7 +141,7 @@ public class DrawManager : MonoBehaviour
     }
     void StartDrawing(RaycastHit hit)
     {
-        //Set drawComef.  ,  Placing first draw point and set it  , increase pointCount
+       //Set drawComef.  ,  Placing first draw point and set it  , increase pointCount
         isDrawComeFromOutside = false;
         points[pointCount] = new SplinePoint();
         points[pointCount].position = hit.point;
@@ -156,7 +156,7 @@ public class DrawManager : MonoBehaviour
         isDrawComeFromOutside = false;
 
     }
-
+   
     void DrawWithMove(RaycastHit hit)
     {
         if (!isDrawComeFromOutside)
@@ -172,7 +172,7 @@ public class DrawManager : MonoBehaviour
 
             lastPos = hit.point;
             pointCount++;
-
+           
 
         }
     }
@@ -185,7 +185,7 @@ public class DrawManager : MonoBehaviour
         Vector3 middle = spline.EvaluatePosition(travel);
 
 
-        if (middle.x > 0.5f)
+        if ( middle.x > 0.5f)
         {
             direction = "Right";
         }
@@ -207,7 +207,7 @@ public class DrawManager : MonoBehaviour
                 Destroy(wingsPoint.transform.GetChild(i).gameObject);
             }
         }
-
+        
         GameObject transporter = (GameObject)Instantiate(drawObjPref, closest, Quaternion.identity);
         createdDrawObj.AddComponent<MeshCollider>().convex = true;
         createdDrawObj.transform.parent = transporter.transform;

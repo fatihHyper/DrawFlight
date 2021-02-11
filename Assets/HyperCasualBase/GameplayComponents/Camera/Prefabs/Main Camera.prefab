@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2068365276534119254}
   - component: {fileID: 2068365276534119256}
   - component: {fileID: 2068365276481751571}
+  - component: {fileID: 3355462753789313570}
   m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -88,12 +89,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f8db4b329724ec8a0b2cb1c9b946be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 40
+  distance: 60
   focusRadius: 5
   focusCentering: 0.21
   rotationSpeed: 50
-  minVerticalAngle: 45
-  maxVerticalAngle: 45
+  minVerticalAngle: 25
+  maxVerticalAngle: 25
   alignDelay: 5
   alignSmoothRange: 12.4
   obstructionMask:
@@ -159,3 +160,12 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!45 &3355462753789313570
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068365276534119252}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: e265fe8490de95a4badde807c6d812f5, type: 2}

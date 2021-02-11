@@ -8,6 +8,12 @@ TagManager:
   - Wall
   - WingPoint
   - DrawPanel
+  - Stop
+  - Esquina
+  - Marcador
+  - Blocks
+  - StartPlatform
+  - Wing
   layers:
   - Default
   - TransparentFX
@@ -22,9 +28,9 @@ TagManager:
   - PostProcessing
   - Obstacle
   - DrawPanel
-  - 
-  - 
-  - 
+  - StartPlatform
+  - Plane
+  - WingPoint
   - 
   - 
   - 

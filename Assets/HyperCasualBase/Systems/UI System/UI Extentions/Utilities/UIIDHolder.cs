@@ -11,6 +11,7 @@ public static class UIIDHolder
     public static string LevelPanel = "LevelPanel";
     public static string MultiChoicePanel = "MultiChoicePanel";
     public static string JoystickPanel = "JoystickPanel";
+    public static string CoinPanel = "CoinPanel";
     public static string QAPanel = "QAPanel";
 
     public static List<string> UIIds
@@ -22,6 +23,7 @@ public static class UIIDHolder
             ids.Add(SkinPanel);
             ids.Add(LevelPanel);
             ids.Add(JoystickPanel);
+            ids.Add(CoinPanel);
             ids.Add(QAPanel);
             return ids;
         }

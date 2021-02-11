@@ -11,4 +11,6 @@ public static class EventManager
     public static UnityEvent OnAskQuestion = new UnityEvent();
     public static UnityEvent FirstDrawExist = new UnityEvent();
     public static UnityEvent NextCheckPoint = new UnityEvent();
+    public static UnityEvent OnCoinPickUp = new UnityEvent();
+    public static UnityEvent FlightCrash = new UnityEvent();
 }

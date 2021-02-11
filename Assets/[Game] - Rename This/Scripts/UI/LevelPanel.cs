@@ -16,7 +16,7 @@ public class LevelPanel : AdvancePanel
     {
         if (Managers.Instance == null)
             return;
-
+     
         LevelManager.Instance.OnLevelStart.AddListener(ShowPanelAnimated);
         LevelManager.Instance.OnLevelFinish.AddListener(HidePanelAnimated);
         GameManager.Instance.OnStageSuccess.AddListener(SetFakeLevel);
@@ -47,5 +47,5 @@ public class LevelPanel : AdvancePanel
         PlayerPrefs.SetInt(PlayerPrefKeys.FakeLevel, fakeLevel);
     }
 
-
+   
 }

@@ -11,4 +11,6 @@ public static class PlayerPrefKeys
     public static readonly string RewardedWatchCount = "RewardedWatchCount";
     public static readonly string RewardAmount = "RewardAmount";
     public static readonly string SoundStatus = "SoundStatus";
+    public static readonly string CoinCount = "CoinCount";
+
 }

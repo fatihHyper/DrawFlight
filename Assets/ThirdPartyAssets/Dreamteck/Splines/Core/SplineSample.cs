@@ -19,6 +19,7 @@ namespace Dreamteck.Splines{
                     if (up == Vector3.up) return Quaternion.LookRotation(Vector3.up, Vector3.back);
                     else return Quaternion.LookRotation(forward, Vector3.up);
                 }
+
                 return Quaternion.LookRotation(forward, up); }
         }
 

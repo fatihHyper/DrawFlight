@@ -22,4 +22,5 @@ public class GameStartPanel : AdvancePanel
         LevelManager.Instance.OnLevelStart.RemoveListener(HidePanel);
         SceneController.Instance.OnSceneLoaded.RemoveListener(ShowPanel);
     }
+    
 }

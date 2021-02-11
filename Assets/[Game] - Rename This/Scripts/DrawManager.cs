@@ -1,56 +1,43 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using Dreamteck.Splines;
+using System.Collections;
 
 public class DrawManager : MonoBehaviour
 {
 
-    public GameObject m_rendererPrefab;
+    public GameObject M_rendererPrefab;
+    public GameObject DrawPanel;
+    public GameObject DrawObjPref;
+    public Material Material;
+    public Mesh Wallmesh;
+    [HideInInspector] public GameObject transporter;
+
+    [SerializeField] private float MaxLength = 10;
+    [SerializeField] private Camera m_camera;
     private GameObject m_currentRenderer;
-
-
-    public GameObject transformPanel;
-    private GameObject wingsPoint;
-
     private int layer_mask;
     private bool isDrawComeFromOutside;
-    public GameObject drawObjPref;
     private GameObject createdDrawObj;
-    public Material material;
-    public Mesh Wallmesh;
-    [HideInInspector]
-    public GameObject transporter;
-
-
+    public GameObject WingsPoint;
     private Vector3 closest;
     private float closestDist;
-
     private Vector3 startPos;
     private Vector3 lastPos;
-    [SerializeField] private Camera m_camera;
-
     private int pointCount;
     private SplineComputer spline;
     private SplinePoint[] points;
-    [HideInInspector]
-    public string direction;
-    [HideInInspector]
-    public Vector3 middle;
-    [HideInInspector]
-    public float splineLength;
-
-
-
+    [HideInInspector] public float SplineLength;
+    [HideInInspector] public string Direction;
 
     private void Start()
     {
         layer_mask = LayerMask.GetMask("DrawPanel");
 
         pointCount = 0;
-
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
 
         RaycastHit hit;
@@ -72,8 +59,7 @@ public class DrawManager : MonoBehaviour
                         Destroy(transform.GetChild(i).gameObject);
                     }
                 }
-
-                m_currentRenderer = (GameObject)Instantiate(m_rendererPrefab, hit.point, Quaternion.identity, transform);
+                m_currentRenderer = (GameObject)Instantiate(M_rendererPrefab, hit.point, Quaternion.identity, transform);
             }
 
 
@@ -91,9 +77,9 @@ public class DrawManager : MonoBehaviour
                         DrawWithMove(hit);
 
                     }
-                    if (Mathf.Abs(transformPanel.transform.position.x - hit.point.x) < closestDist)
+                    if (Mathf.Abs(DrawPanel.transform.position.x - hit.point.x) < closestDist)
                     {
-                        closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
+                        closestDist = Mathf.Abs(DrawPanel.transform.position.x - hit.point.x);
                         closest = hit.point;
                     }
                     //2D draw with MouseMove
@@ -112,33 +98,31 @@ public class DrawManager : MonoBehaviour
 
     void CreatSplineObject(RaycastHit hit)
     {
-
         startPos = hit.point;
         lastPos = startPos;
         //Creation of base object for draw, Change layer for being sure it s not drawble on itself , Add Components
-        createdDrawObj = (GameObject)Instantiate(drawObjPref, startPos, Quaternion.identity, transformPanel.transform);
-        createdDrawObj.layer = LayerMask.NameToLayer("Ignore Raycast");
-        createdDrawObj.GetComponent<MeshRenderer>().material = material;
+        createdDrawObj = (GameObject)Instantiate(DrawObjPref, startPos, Quaternion.identity);
+        createdDrawObj.GetComponent<MeshRenderer>().material = Material;
         createdDrawObj.GetComponent<MeshRenderer>().enabled = false;
         spline = createdDrawObj.AddComponent<SplineComputer>();
 
         //SplineMesh Component adjust settings
         Dreamteck.Splines.SplineMesh splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
-        splineMesh.updateMethod = SplineUser.UpdateMethod.FixedUpdate;
-        spline.updateMode = SplineComputer.UpdateMode.FixedUpdate;
+        splineMesh.updateMethod = SplineUser.UpdateMethod.Update;
+        spline.updateMode = SplineComputer.UpdateMode.AllUpdate;
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
         splineMesh.GetChannel(0).minScale = new Vector3(1f, 0.3f, 0.1f);
         splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.3f, 0.1f);
-        points = new SplinePoint[100];
+        points = new SplinePoint[500];
         spline.type = Spline.Type.BSpline;
         spline.sampleMode = SplineComputer.SampleMode.Uniform;
         spline.customNormalInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
         spline.customValueInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
 
 
-        closestDist = Mathf.Abs(transformPanel.transform.position.x - hit.point.x);
+        closestDist = Mathf.Abs(DrawPanel.transform.position.x - hit.point.x);
         closest = hit.point;
 
     }
@@ -183,49 +167,69 @@ public class DrawManager : MonoBehaviour
     void EndOfDraw()
     {
         if (spline == null) return;
-        splineLength = spline.CalculateLength();
-        double travel = spline.Travel(0, splineLength / 2f, Spline.Direction.Forward);
+        var prevLength = SplineLength;
+        SplineLength = spline.CalculateLength();
+        if (SplineLength < 0.01) {
+            SplineLength = prevLength;
+            return; 
+        } 
+        double travel = spline.Travel(0, SplineLength / 2f, Spline.Direction.Forward);
         Vector3 middle = spline.EvaluatePosition(travel);
 
-
-        if (middle.x > 0.5f)
+        if (middle.x > 1f)
         {
-            direction = "Right";
+            Direction = "Right";
         }
-        else if (middle.x < -0.5f)
+        else if (middle.x < -1f)
         {
-            direction = "Left";
+            Direction = "Left";
         }
         else
         {
-            direction = "Forward";
+            Direction = "Forward";
         }
 
         //Make disable all children of wingsPoint
-        wingsPoint = GameObject.FindWithTag("WingPoint");
-        if (wingsPoint.transform.childCount != 0)
+        if (WingsPoint.transform.childCount != 0)
         {
-            for (int i = 0; i < wingsPoint.transform.childCount; i++)
+            for (int i = 0; i < WingsPoint.transform.childCount; i++)
             {
-                Destroy(wingsPoint.transform.GetChild(i).gameObject);
+                Destroy(WingsPoint.transform.GetChild(i).gameObject);
             }
         }
 
-        GameObject transporter = (GameObject)Instantiate(drawObjPref, closest, Quaternion.identity);
-        createdDrawObj.AddComponent<MeshCollider>().convex = true;
-        createdDrawObj.transform.parent = transporter.transform;
-        transporter.transform.position = wingsPoint.transform.position;
+       
+        Transform player = WingsPoint.GetComponentInParent<Transform>();
+        
 
-        transporter.transform.rotation = wingsPoint.GetComponentInParent<Transform>().rotation;
-        transporter.transform.parent = wingsPoint.transform;
+        GameObject transporter = (GameObject)Instantiate(DrawObjPref, closest, Quaternion.identity);
+
+        if (createdDrawObj.GetComponent<MeshCollider>() == null)
+        {
+            createdDrawObj.AddComponent<MeshCollider>().convex = true;
+        }
+        else
+        {
+
+            createdDrawObj.GetComponent<MeshCollider>().convex = true;
+        }
+
+        createdDrawObj.transform.parent = transporter.transform;
+        //createdDrawObj.transform.localPosition = Vector3.zero;
+        
+        transporter.transform.position = WingsPoint.transform.position;
+
+        transporter.transform.rotation = WingsPoint.GetComponentInParent<Transform>().rotation;
+        transporter.transform.parent = WingsPoint.transform;
+        transporter.transform.localPosition = Vector3.zero;
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
 
-        pointCount = 0;
-        //Destroy 2d render object on panel
+
         Destroy(m_currentRenderer);
 
         EventManager.FirstDrawExist.Invoke();
+        
     }
 
 
@@ -241,6 +245,8 @@ public class DrawManager : MonoBehaviour
                 return (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0);
         }
     }
+
+  
 
 
 }

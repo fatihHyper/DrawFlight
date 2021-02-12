@@ -12,8 +12,9 @@ public class CoinSpin : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         EventManager.OnCoinPickUp.Invoke();
-        Destroy(gameObject);
         PoolingSystem.Instance.InstantiateAPS("CoinCollect", transform.position);
+        Destroy(gameObject);
+        
 
     }
 }

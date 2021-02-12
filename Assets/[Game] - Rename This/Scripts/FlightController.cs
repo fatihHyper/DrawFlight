@@ -53,8 +53,8 @@ public class FlightController : MonoBehaviour
     {
         if (_isCrush)
         {
-            transform.Rotate(0.5f * 100 * Time.deltaTime, 0, 0);
-            _planeRigid.mass = 100;
+            _planeRigid.velocity = Vector3.zero;
+            _planeRigid.angularVelocity = Vector3.zero;
         }
 
         else
@@ -65,9 +65,9 @@ public class FlightController : MonoBehaviour
                 rotationInfo = DrawManager.Direction;
 
 
-                if (DrawManager.SplineLength < 4 && _planeRigid.velocity != Vector3.zero)
+                if (DrawManager.SplineLength <6 && _planeRigid.velocity != Vector3.zero)
                 {
-                    transform.Rotate(0.5f * 100 * Time.deltaTime, 0, 0);
+                    transform.Rotate(0.5f * 100 * Time.fixedDeltaTime, 0, 0);
                     _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;
                 }
                 else
@@ -114,10 +114,10 @@ public class FlightController : MonoBehaviour
 
     void GetRotation(string rotationInfo)
     {
+        
         //Get rotation info and rotate plane smoothly
         switch (rotationInfo)
         {
-
             case "Left":
                 if (localRotationZ <40)
                 {

@@ -6,11 +6,11 @@ using System.Collections;
 public class DrawManager : MonoBehaviour
 {
 
-    public GameObject M_rendererPrefab;
-    public GameObject DrawPanel;
-    public GameObject DrawObjPref;
-    public Material Material;
-    public Mesh Wallmesh;
+    [SerializeField] private GameObject M_rendererPrefab;
+    [SerializeField] private GameObject DrawPanel;
+    [SerializeField] private GameObject DrawObjPref;
+    [SerializeField] private Material Material;
+    [SerializeField] private Mesh Wallmesh;
     [HideInInspector] public GameObject transporter;
 
     [SerializeField] private float MaxLength = 10;
@@ -49,6 +49,7 @@ public class DrawManager : MonoBehaviour
         {
             if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
             {
+                isDrawComeFromOutside = false;
                 CreatSplineObject(hit);
                 StartDrawing(hit);
 
@@ -89,9 +90,10 @@ public class DrawManager : MonoBehaviour
                 
             }
         }
-        else if (IsInput(TouchPhase.Ended))
+        else if (IsInput(TouchPhase.Ended) && !isDrawComeFromOutside)
         {
             EndOfDraw();
+            isDrawComeFromOutside = true;
         }
 
     }
@@ -213,7 +215,7 @@ public class DrawManager : MonoBehaviour
 
             createdDrawObj.GetComponent<MeshCollider>().convex = true;
         }
-
+        createdDrawObj.AddComponent<CrashController>();
         createdDrawObj.transform.parent = transporter.transform;
         //createdDrawObj.transform.localPosition = Vector3.zero;
         

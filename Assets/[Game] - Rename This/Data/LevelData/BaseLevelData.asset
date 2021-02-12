@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: BaseLevelData
   m_EditorClassIdentifier: 
   Levels:
+  - LevelTypes: 
+    LoadLevelID: Level
+    QADatas: []
   - LevelTypes: 00000000
     LoadLevelID: Level_2
     QADatas: []

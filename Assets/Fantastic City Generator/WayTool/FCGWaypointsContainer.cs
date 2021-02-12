@@ -42,7 +42,7 @@ public class FCGWaypointsContainer : MonoBehaviour {
         else
         {
             waypoints[i].rotation = Quaternion.LookRotation(waypoints[i].position - waypoints[i - 1].position);
-            NextWays(waypoints[i]);
+            //NextWays(waypoints[i]);
         }
 
         

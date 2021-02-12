@@ -111,19 +111,19 @@ public class DrawManager : MonoBehaviour
 
         //SplineMesh Component adjust settings
         splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
-        splineMesh.updateMethod = SplineUser.UpdateMethod.FixedUpdate;
-        spline.updateMode = SplineComputer.UpdateMode.FixedUpdate;
+        splineMesh.updateMethod = SplineUser.UpdateMethod.Update;
+        spline.updateMode = SplineComputer.UpdateMode.AllUpdate;
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
         splineMesh.GetChannel(0).minScale = new Vector3(1f, 0.3f, 0.1f);
         splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.3f, 0.1f);
-        points = new SplinePoint[500];
+        points = new SplinePoint[100];
         spline.type = Spline.Type.BSpline;
         spline.sampleMode = SplineComputer.SampleMode.Uniform;
         spline.customNormalInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
         spline.customValueInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
-
+        pointCount = 0;
 
         closestDist = Mathf.Abs(DrawPanel.transform.position.x - hit.point.x);
         closest = hit.point;
@@ -176,7 +176,7 @@ public class DrawManager : MonoBehaviour
             SplineLength = prevLength;
             return; 
         } 
-        double travel = spline.Travel(0, SplineLength / 2f, Spline.Direction.Forward);
+        double travel = spline.Travel(0, SplineLength / 2f);
         Vector3 middle = spline.EvaluatePosition(travel);
 
         if (middle.x > 1f)
@@ -228,9 +228,11 @@ public class DrawManager : MonoBehaviour
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
 
-        splineMesh.autoUpdate = false;
-        Destroy(m_currentRenderer);
 
+        Destroy(m_currentRenderer);
+        Destroy(splineMesh);
+        Destroy(spline);
+        
         EventManager.FirstDrawExist.Invoke();
         
     }

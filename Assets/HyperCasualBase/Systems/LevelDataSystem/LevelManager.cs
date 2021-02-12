@@ -14,7 +14,7 @@ public class LevelManager : Singleton<LevelManager>
     [InlineEditor]
     private LevelData LevelData;
 
-    public Level CurrentLevel { get { return LevelData.Levels[levelIndex]; } }
+    public Level CurrentLevel { get { return LevelData.Levels[LevelIndex]; } }
 
 
     [HideInInspector]
@@ -29,7 +29,7 @@ public class LevelManager : Singleton<LevelManager>
 
    
 
-    private int levelIndex
+    public int LevelIndex
     {
         get
         {
@@ -73,10 +73,10 @@ public class LevelManager : Singleton<LevelManager>
     {
         FinishLevel();
 
-        levelIndex++;
-        if (levelIndex > LevelData.Levels.Count -1)
+        LevelIndex++;
+        if (LevelIndex > LevelData.Levels.Count -1)
         {
-            levelIndex = 0;
+            LevelIndex = 0;
         }
 
         SceneController.Instance.LoadScene(CurrentLevel.LoadLevelID);

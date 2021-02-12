@@ -156,7 +156,6 @@ namespace Dreamteck.Splines
             if (tsMesh == null) tsMesh = new TS_Mesh();
             else tsMesh.Clear();
             tsMesh.Combine(combineMeshes, false);
-            Debug.Log("Generating " + gameObject.name);
 
         }
 

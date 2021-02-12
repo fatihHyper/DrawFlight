@@ -15,13 +15,12 @@ public class CrashController : MonoBehaviour
     }
     IEnumerator Wait()
     {
-        EventManager.OnCoinPickUp.Invoke();
+        EventManager.FlightCrash.Invoke();
 
         PoolingSystem.Instance.InstantiateAPS("FlightFireExplosion", gameObject.transform.position);
        
         //gameObject.GetComponent<MeshRenderer>().enabled = false;
-        gameObject.GetComponent<Collider>().enabled = false;
-        gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        //gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Collider>().enabled = false;
         yield return new WaitForSeconds(1f);
         GameManager.Instance.CompilateStage(false);
         

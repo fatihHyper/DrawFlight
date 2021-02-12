@@ -58,14 +58,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 500
   field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 16439
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -89,17 +89,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f8db4b329724ec8a0b2cb1c9b946be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 60
+  distance: 40
   focusRadius: 5
   focusCentering: 0.21
   rotationSpeed: 50
-  minVerticalAngle: 25
-  maxVerticalAngle: 25
+  minVerticalAngle: 35
+  maxVerticalAngle: 35
   alignDelay: 5
   alignSmoothRange: 12.4
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 0
 --- !u!114 &2068365276481751571
 MonoBehaviour:
   m_ObjectHideFlags: 0

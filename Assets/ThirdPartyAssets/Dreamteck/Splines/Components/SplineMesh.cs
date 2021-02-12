@@ -156,6 +156,8 @@ namespace Dreamteck.Splines
             if (tsMesh == null) tsMesh = new TS_Mesh();
             else tsMesh.Clear();
             tsMesh.Combine(combineMeshes, false);
+            Debug.Log("Generating " + gameObject.name);
+
         }
 
         private void Place(Channel channel, TS_Mesh target, double percent)

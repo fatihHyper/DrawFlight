@@ -68,7 +68,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 1
     - _GlossyReflections: 1
-    - _Metallic: 0.363
+    - _Metallic: 0.333
     - _Mode: 2
     - _NDVMaxFrag: 1
     - _NDVMinFrag: 0.5

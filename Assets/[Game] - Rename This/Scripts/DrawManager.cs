@@ -27,6 +27,7 @@ public class DrawManager : MonoBehaviour
     private int pointCount;
     private SplineComputer spline;
     private SplinePoint[] points;
+    private Dreamteck.Splines.SplineMesh splineMesh;
     [HideInInspector] public float SplineLength;
     [HideInInspector] public string Direction;
 
@@ -109,9 +110,9 @@ public class DrawManager : MonoBehaviour
         spline = createdDrawObj.AddComponent<SplineComputer>();
 
         //SplineMesh Component adjust settings
-        Dreamteck.Splines.SplineMesh splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
-        splineMesh.updateMethod = SplineUser.UpdateMethod.Update;
-        spline.updateMode = SplineComputer.UpdateMode.AllUpdate;
+        splineMesh = createdDrawObj.AddComponent<Dreamteck.Splines.SplineMesh>();
+        splineMesh.updateMethod = SplineUser.UpdateMethod.FixedUpdate;
+        spline.updateMode = SplineComputer.UpdateMode.FixedUpdate;
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
@@ -227,7 +228,7 @@ public class DrawManager : MonoBehaviour
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
 
-
+        splineMesh.autoUpdate = false;
         Destroy(m_currentRenderer);
 
         EventManager.FirstDrawExist.Invoke();

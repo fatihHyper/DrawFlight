@@ -10,6 +10,8 @@ public class FlightController : MonoBehaviour
     public Vector3 direction;
     [SerializeField]
     private SplineComputer splineComputer;
+    [SerializeField]
+    private GameObject massObject;
 
     private Rigidbody _planeRigid;
     private float _speed;
@@ -53,8 +55,12 @@ public class FlightController : MonoBehaviour
     {
         if (_isCrush)
         {
-            _planeRigid.velocity = Vector3.zero;
-            _planeRigid.angularVelocity = Vector3.zero;
+            massObject.SetActive(true);
+            Quaternion target = Quaternion.Euler(45, transform.localRotation.y, transform.localRotation.z);
+            transform.rotation = Quaternion.Slerp(transform.localRotation, target, Time.fixedDeltaTime);
+            //_planeRigid.velocity = transform.forward * _speed * 5* Time.deltaTime;
+            _planeRigid.mass = 500;
+
         }
 
         else
@@ -65,7 +71,7 @@ public class FlightController : MonoBehaviour
                 rotationInfo = DrawManager.Direction;
 
 
-                if (DrawManager.SplineLength <6 && _planeRigid.velocity != Vector3.zero)
+                if (DrawManager.SplineLength <5 && _planeRigid.velocity != Vector3.zero)
                 {
                     transform.Rotate(0.5f * 100 * Time.fixedDeltaTime, 0, 0);
                     _planeRigid.velocity = transform.forward * _speed * 2 * Time.deltaTime;

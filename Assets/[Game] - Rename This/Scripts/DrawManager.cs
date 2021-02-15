@@ -53,7 +53,7 @@ public class DrawManager : MonoBehaviour
                 isDrawComeFromOutside = false;
                 CreatSplineObject(hit);
                 StartDrawing(hit);
-
+                Debug.Log(points[0].position.x + " -" + points[0].position.z);
                 if (gameObject.transform.childCount != 0)
                 {
                     for (int i = 0; i < gameObject.transform.childCount; i++)
@@ -169,6 +169,8 @@ public class DrawManager : MonoBehaviour
 
     void EndOfDraw()
     {
+
+
         if (spline == null) return;
         var prevLength = SplineLength;
         SplineLength = spline.CalculateLength();
@@ -179,18 +181,35 @@ public class DrawManager : MonoBehaviour
         double travel = spline.Travel(0, SplineLength / 2f);
         Vector3 middle = spline.EvaluatePosition(travel);
 
-        if (middle.x > 1f)
+        
+       
+
+        if ((points[0].position.x < 0 && points[0].position.z >= -14f) && (points[pointCount-1].position.x >= 1 && points[pointCount-1].position.z <= -15))
         {
             Direction = "Right";
         }
-        else if (middle.x < -1f)
+        else if ((points[0].position.x > 0 && points[0].position.z >= -14f) && (points[pointCount-1].position.x <= 1 && points[pointCount-1].position.z <= -15))
         {
             Direction = "Left";
         }
         else
         {
-            Direction = "Forward";
+            if (middle.x > 1f)
+            {
+                Direction = "Right";
+            }
+            else if (middle.x < -1f)
+            {
+                Direction = "Left";
+            }
+            else
+            {
+                Direction = "Forward";
+            }
+
         }
+
+
 
         //Make disable all children of wingsPoint
         if (WingsPoint.transform.childCount != 0)
@@ -216,7 +235,7 @@ public class DrawManager : MonoBehaviour
 
             createdDrawObj.GetComponent<MeshCollider>().convex = true;
         }
-        createdDrawObj.AddComponent<CrashController>();
+        createdDrawObj.AddComponent<WingCrashController>();
         createdDrawObj.transform.parent = transporter.transform;
         //createdDrawObj.transform.localPosition = Vector3.zero;
         

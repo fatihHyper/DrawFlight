@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4581761398513872671}
   - component: {fileID: 4581761398513872670}
+  - component: {fileID: 2999897343129294049}
   m_Layer: 0
   m_Name: DrawPanelCamera
   m_TagString: Untagged
@@ -75,6 +76,18 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &2999897343129294049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4581761398513872668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b348bd388d410c6499e8573cb3d594ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4581761396648776588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90,7 +103,7 @@ PrefabInstance:
     - target: {fileID: 7787657236764889008, guid: b9d422d4be4ea3d40a3a1ffb4b52eb88,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -18.54
+      value: -19.5
       objectReference: {fileID: 0}
     - target: {fileID: 7787657236764889008, guid: b9d422d4be4ea3d40a3a1ffb4b52eb88,
         type: 3}

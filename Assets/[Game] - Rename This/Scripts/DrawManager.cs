@@ -74,7 +74,7 @@ public class DrawManager : MonoBehaviour
             {
                 if (points != null)
                 {
-                    if (Vector3.Distance(lastPos, hit.point) >= 1f && pointCount < points.Length)
+                    if (Vector3.Distance(lastPos, hit.point) >= 0.2f && pointCount < points.Length)
                     {
                         DrawWithMove(hit);
 

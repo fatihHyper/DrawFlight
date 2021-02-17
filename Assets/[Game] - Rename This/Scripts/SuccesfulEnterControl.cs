@@ -5,9 +5,23 @@ using UnityEngine;
 public class SuccesfulEnterControl : MonoBehaviour
 {
 
+    private ObstacleController obstacleControllers;
+
+    private bool isTriggered;
+
+
+    private void Start()
+    {
+        obstacleControllers = transform.parent.GetComponentInChildren<ObstacleController>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        PoolingSystem.Instance.InstantiateAPS("Confetti", gameObject.transform.position);
-        transform.parent.GetComponent<Renderer>().material.color = Color.yellow;
+        if (isTriggered)
+            return;
+        isTriggered = true;
+
+        obstacleControllers.PassObstacle();
+        
     }
 }

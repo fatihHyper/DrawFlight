@@ -27,6 +27,10 @@ public class DrawManager : MonoBehaviour
     private int pointCount;
     private SplineComputer spline;
     private SplinePoint[] points;
+    private GameObject trail_1;
+    private GameObject trail_2;
+    private GameObject trailEnd_1;
+    private GameObject trailEnd_2;
     private Dreamteck.Splines.SplineMesh splineMesh;
     [HideInInspector] public float SplineLength;
     [HideInInspector] public string Direction;
@@ -116,9 +120,7 @@ public class DrawManager : MonoBehaviour
         splineMesh.AddChannel(Wallmesh, "Wall");
         splineMesh.GetChannel(0).type = Dreamteck.Splines.SplineMesh.Channel.Type.Extrude;
         splineMesh.GetChannel(0).count = 50;
-        splineMesh.GetChannel(0).minScale = new Vector3(1f, 0.3f, 0.1f);
-        splineMesh.GetChannel(0).maxScale = new Vector3(1f, 0.3f, 0.1f);
-        points = new SplinePoint[100];
+        points = new SplinePoint[500];
         spline.type = Spline.Type.BSpline;
         spline.sampleMode = SplineComputer.SampleMode.Uniform;
         spline.customNormalInterpolation = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
@@ -181,8 +183,23 @@ public class DrawManager : MonoBehaviour
         double travel = spline.Travel(0, SplineLength / 2f);
         Vector3 middle = spline.EvaluatePosition(travel);
 
-        
-       
+        PoolingSystem.Instance.DestroyAPS(trail_1);
+        PoolingSystem.Instance.DestroyAPS(trail_2);
+        PoolingSystem.Instance.DestroyAPS(trailEnd_1);
+        PoolingSystem.Instance.DestroyAPS(trailEnd_2);
+
+        trail_1 = PoolingSystem.Instance.InstantiateAPS("WingTrail", points[0].position, Quaternion.FromToRotation(Vector3.forward, points[0].normal));
+        trail_1.transform.parent = createdDrawObj.transform;
+        trail_2 = PoolingSystem.Instance.InstantiateAPS("WingTrail", points[pointCount - 1].position, Quaternion.FromToRotation(Vector3.forward, points[pointCount - 1].normal));
+        trail_2.transform.parent = createdDrawObj.transform;
+
+
+        //Kanat sonlari commentle
+        trailEnd_1 = PoolingSystem.Instance.InstantiateAPS("WingEnds", points[0].position, Quaternion.FromToRotation(Vector3.up, points[0].normal));
+        trailEnd_1.transform.parent = createdDrawObj.transform;
+        trailEnd_2 = PoolingSystem.Instance.InstantiateAPS("WingEnds", points[pointCount - 1].position, Quaternion.FromToRotation(Vector3.up, points[pointCount - 1].normal));
+        trailEnd_2.transform.parent = createdDrawObj.transform;
+
 
         if ((points[0].position.x < 0 && points[0].position.z >= -14f) && (points[pointCount-1].position.x >= 1 && points[pointCount-1].position.z <= -15))
         {
@@ -208,7 +225,7 @@ public class DrawManager : MonoBehaviour
             }
 
         }
-
+       
 
 
         //Make disable all children of wingsPoint
@@ -225,6 +242,7 @@ public class DrawManager : MonoBehaviour
         
 
         GameObject transporter = (GameObject)Instantiate(DrawObjPref, closest, Quaternion.identity);
+       
 
         if (createdDrawObj.GetComponent<MeshCollider>() == null)
         {
@@ -235,17 +253,26 @@ public class DrawManager : MonoBehaviour
 
             createdDrawObj.GetComponent<MeshCollider>().convex = true;
         }
+        
+
+
         createdDrawObj.AddComponent<WingCrashController>();
         createdDrawObj.transform.parent = transporter.transform;
         //createdDrawObj.transform.localPosition = Vector3.zero;
+
         
+
         transporter.transform.position = WingsPoint.transform.position;
 
         transporter.transform.rotation = WingsPoint.GetComponentInParent<Transform>().rotation;
         transporter.transform.parent = WingsPoint.transform;
         transporter.transform.localPosition = Vector3.zero;
+
+
+
         createdDrawObj.GetComponent<MeshRenderer>().enabled = true;
         isDrawComeFromOutside = true;
+
 
 
         Destroy(m_currentRenderer);

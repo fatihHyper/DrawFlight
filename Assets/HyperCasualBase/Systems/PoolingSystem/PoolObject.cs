@@ -9,7 +9,9 @@ public class PoolObject : MonoBehaviour
         if (Managers.Instance == null)
             return;
 
-        SceneController.Instance.OnSceneStartedLoading.AddListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
+        GameManager.Instance.OnStageFail.AddListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
+        GameManager.Instance.OnStageSuccess.AddListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
+
     }
 
     private void OnDestroy()
@@ -17,6 +19,7 @@ public class PoolObject : MonoBehaviour
         if (Managers.Instance == null)
             return;
 
-        SceneController.Instance.OnSceneStartedLoading.RemoveListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
+        GameManager.Instance.OnStageFail.RemoveListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
+        GameManager.Instance.OnStageSuccess.RemoveListener(() => PoolingSystem.Instance.DestroyAPS(gameObject));
     }
 }

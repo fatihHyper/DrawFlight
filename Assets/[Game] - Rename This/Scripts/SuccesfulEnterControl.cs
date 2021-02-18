@@ -22,6 +22,7 @@ public class SuccesfulEnterControl : MonoBehaviour
         isTriggered = true;
 
         obstacleControllers.PassObstacle();
+        HapticManager.Haptic(HapticTypes.HeavyImpact);
         
     }
 }

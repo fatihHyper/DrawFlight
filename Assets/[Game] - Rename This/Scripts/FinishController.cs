@@ -8,7 +8,9 @@ public class FinishController : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            Debug.Log("player entered");
             GameManager.Instance.CompilateStage(true);
+            HapticManager.Haptic(HapticTypes.SoftImpact);
         }
         
 

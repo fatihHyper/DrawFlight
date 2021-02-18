@@ -10,6 +10,7 @@ public class FinishController : MonoBehaviour
         {
             Debug.Log("player entered");
             GameManager.Instance.CompilateStage(true);
+            DrawManager.Instance.enabled = false;
             HapticManager.Haptic(HapticTypes.SoftImpact);
         }
         

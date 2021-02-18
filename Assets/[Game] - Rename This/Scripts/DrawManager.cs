@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using Dreamteck.Splines;
 using System.Collections;
 
-public class DrawManager : MonoBehaviour
+public class DrawManager : Singleton<DrawManager>
 {
 
     [SerializeField] private GameObject M_rendererPrefab;
@@ -57,7 +57,6 @@ public class DrawManager : MonoBehaviour
                 isDrawComeFromOutside = false;
                 CreatSplineObject(hit);
                 StartDrawing(hit);
-                Debug.Log(points[0].position.x + " -" + points[0].position.z);
                 if (gameObject.transform.childCount != 0)
                 {
                     for (int i = 0; i < gameObject.transform.childCount; i++)

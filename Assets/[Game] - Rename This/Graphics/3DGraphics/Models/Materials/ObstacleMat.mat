@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ObstacleMat
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: TCP2_RIM TCP2_SPEC _ALPHAPREMULTIPLY_ON
-  m_LightmapFlags: 4
+  m_ShaderKeywords: TCP2_RIM TCP2_SPEC _ALPHAPREMULTIPLY_ON _EMISSION
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
@@ -85,7 +85,7 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 0.48235297, g: 0.7254902, b: 0.18039216, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 0.21957058, g: 0.5660378, b: 0, a: 1}
     - _HColor: {r: 0.785, g: 0.785, b: 0.785, a: 1}
     - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
     - _RimDir: {r: 0, g: 0, b: 1, a: 0}

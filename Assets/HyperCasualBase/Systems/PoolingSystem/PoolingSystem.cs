@@ -199,6 +199,8 @@ public class PoolingSystem : Singleton<PoolingSystem>
 
     public void DestroyAPS(GameObject clone)
     {
+        if (clone == null)
+            return;
         clone.transform.SetParent(transform);
         IPoolable poolable = clone.GetComponent<IPoolable>();
         if (poolable != null)

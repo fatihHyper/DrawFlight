@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class CrashController : MonoBehaviour
 {
+
+    bool isTriggered = false;
     private void OnCollisionEnter(Collision collision)
     {
+        if (isTriggered) return;
+
         if (collision.transform.tag != "StartPlatform" && collision.transform.tag != "WingPoint" && collision.transform.tag != "Wing")
         {
+            isTriggered = true;
             StartCoroutine(Wait());
            
         }

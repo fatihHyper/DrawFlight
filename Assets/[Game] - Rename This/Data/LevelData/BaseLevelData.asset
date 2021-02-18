@@ -16,12 +16,3 @@ MonoBehaviour:
   - LevelTypes: 
     LoadLevelID: Level_1
     QADatas: []
-  - LevelTypes: 00000000
-    LoadLevelID: Level_2
-    QADatas: []
-  - LevelTypes: 
-    LoadLevelID: Level
-    QADatas: []
-  - LevelTypes: 
-    LoadLevelID: Level_3
-    QADatas: []

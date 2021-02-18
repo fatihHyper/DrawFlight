@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class CoinSpin : MonoBehaviour
 {
-    float speed = 20f;
+    float speed = 50f;
     void Update()
     {
-        transform.Rotate(Vector3.right * speed * Time.deltaTime);
+        transform.Rotate(Vector3.up * speed * Time.deltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("qqqq");
         EventManager.OnCoinPickUp.Invoke();
         PoolingSystem.Instance.InstantiateAPS("CoinCollect", transform.position);
         Destroy(gameObject);

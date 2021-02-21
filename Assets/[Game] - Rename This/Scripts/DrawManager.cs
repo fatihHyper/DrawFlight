@@ -12,6 +12,7 @@ public class DrawManager : Singleton<DrawManager>
     [SerializeField] private Material Material;
     [SerializeField] private Mesh Wallmesh;
     [HideInInspector] public GameObject transporter;
+    public GameObject canvas;
 
     [SerializeField] private float MaxLength = 10;
     [SerializeField] private Camera m_camera;
@@ -44,14 +45,28 @@ public class DrawManager : Singleton<DrawManager>
 
     private void Update()
     {
+        
+            if (Input.GetMouseButton(0))
+            {
+            canvas.SetActive(true);
+            Debug.Log(Input.mousePosition);
+            canvas.transform.position = Input.mousePosition;
+
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            canvas.SetActive(false);
+            Debug.Log("up");
+        }
 
         RaycastHit hit;
         Ray _ray = m_camera.ScreenPointToRay(Input.touchCount == 1 ? (Vector3)Input.mousePosition : Input.mousePosition);
 
-
+       
 
         if (IsInput(TouchPhase.Began) && LevelManager.Instance.IsLevelStarted)
         {
+            
             if (Physics.Raycast(_ray, out hit, 1000f, layer_mask))
             {
                 isDrawComeFromOutside = false;
